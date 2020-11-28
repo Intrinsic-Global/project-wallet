@@ -1,0 +1,41 @@
+pragma solidity ^0.7.5;
+
+contract AccessRestriction {
+
+  address public owner = msg.sender;
+
+  modifier onlyBy(address _account) {
+    require(msg.sender == _account, "Sender not authorized.");
+    _;
+  }
+
+  modifier onlyByAddresses(address _account1, address _account2) {
+    require(
+      msg.sender == _account1 || msg.sender == _account2,
+      "Sender not authorized."
+    );
+    _;
+  }
+
+  function changeOwner(address _newOwner) public onlyBy(owner) {
+    owner = _newOwner;
+  }
+
+  modifier onlyAfter(uint256 _time) {
+    require(block.timestamp >= _time, "Function called too early.");
+    _;
+  }
+
+  function disown() public onlyBy(owner) {
+    delete owner;
+  }
+
+  modifier costs(uint256 _amount) {
+    require(msg.value >= _amount, "Not enough Ether provided.");
+    _;
+    if (msg.value > _amount) msg.sender.transfer(msg.value - _amount);
+  }
+}
+
+// Example of delay restriction:
+// function someFunction() public onlyBy(owner) onlyAfter(creationTime + 6 weeks) {}

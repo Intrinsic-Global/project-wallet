@@ -1,0 +1,15 @@
+[
+  {
+    "inputs": [],
+    "name": "treatyState",
+    "outputs": [
+      {
+        "internalType": "enum TreatyStateMachine.States",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
