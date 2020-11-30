@@ -254,6 +254,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
@@ -269,6 +275,12 @@
         "indexed": false,
         "internalType": "address",
         "name": "_token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_to",
         "type": "address"
       },
       {
@@ -592,6 +604,32 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getSplitAccounts",
+    "outputs": [
+      {
+        "internalType": "address[10]",
+        "name": "",
+        "type": "address[10]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSplits",
+    "outputs": [
+      {
+        "internalType": "uint256[10]",
+        "name": "",
+        "type": "uint256[10]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -660,45 +698,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_lockTime",
-        "type": "uint256"
-      }
-    ],
-    "name": "lockFor",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_days",
-        "type": "uint256"
-      }
-    ],
-    "name": "lockForDays",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_months",
-        "type": "uint256"
-      }
-    ],
-    "name": "lockForMonths",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -23,6 +23,11 @@ contract DistributeEmbedded {
     address[] public splitAccounts;
     uint256 constant splitDecimals = 2;
 
+    struct DistributionAccount {
+        address account;
+        uint split;
+    }
+
     event SetSplit(uint256[] _split);
     event Allocated(uint256 _index, address _account, uint256 _amount);
     event AllocatedToken(
@@ -31,8 +36,8 @@ contract DistributeEmbedded {
         address _account,
         uint256 _amount
     );
-    event Withdraw(uint256 _amount);
-    event WithdrawToken(address _token, uint256 _amount);
+    event Withdraw(address _to, uint256 _amount);
+    event WithdrawToken(address _token, address _to, uint256 _amount);
     event AddSplitAccount(address _account);
     event ClearSplitAccounts();
     event Received(uint256 _amount);
@@ -43,6 +48,15 @@ contract DistributeEmbedded {
             _;
             mutex = false;
         }
+    }
+
+    constructor() {
+        addSplitAccount(msg.sender);
+        split[msg.sender] = 3300;
+        addSplitAccount(address(0x93f8dddd876c7dBE3323723500e83E202A7C96CC));
+        split[msg.sender] = 3300;
+        addSplitAccount(address(0xcCbE7717e986CCb546E50d16143757Aff9CEd4e4));
+        split[msg.sender] = 3300;
     }
 
     /// Add a new account for distribution of incoming funds
@@ -71,7 +85,7 @@ contract DistributeEmbedded {
         emit SetSplit(_split);
     }
 
-    function validSplit(uint256[] memory _split) internal {
+    function validSplit(uint256[] memory _split) internal view {
         require(
             _split.length == splitAccounts.length,
             "Input size must match number of splitAccounts"
@@ -129,7 +143,7 @@ contract DistributeEmbedded {
         console.log("Original balance %s", ethAllocations[msg.sender]);
         msg.sender.transfer(_amount);
         ethAllocations[msg.sender] -= _amount;
-        emit Withdraw(_amount);
+        emit Withdraw(msg.sender, _amount);
         console.log(
             "Success. Remaining balance %s",
             ethAllocations[msg.sender]
@@ -142,7 +156,7 @@ contract DistributeEmbedded {
         console.log("Processing withdraw of %s", max);
         msg.sender.transfer(max);
         ethAllocations[msg.sender] -= max;
-        emit Withdraw(max);
+        emit Withdraw(msg.sender, max);
         console.log("Success");
         return ethAllocations[msg.sender]; // Return remaining balance
     }
@@ -158,7 +172,7 @@ contract DistributeEmbedded {
         );
         IERC20(_tokenAddress).transfer(msg.sender, _amount);
         tokenAllocations[_tokenAddress][msg.sender] -= _amount;
-        emit WithdrawToken(_tokenAddress, _amount);
+        emit WithdrawToken(_tokenAddress, msg.sender, _amount);
         return tokenAllocations[_tokenAddress][msg.sender]; // Return remaining balance
     }
 
@@ -210,6 +224,24 @@ contract DistributeEmbedded {
         return IERC20(_tokenAddress).balanceOf(address(this));
     }
 
+    /// Getters
+
+    function getSplitAccounts() public view returns (address[10] memory) {
+        address[10] memory mSplitAccounts;
+        for(uint i=0; i<splitAccounts.length;i++){
+            mSplitAccounts[i] = splitAccounts[i];
+        }      
+        return mSplitAccounts;
+    }
+
+    function getSplits() public view returns (uint[10] memory) {
+        uint[10] memory splits;
+        for(uint i=0; i<splitAccounts.length;i++){
+            splits[i] = split[splitAccounts[i]];
+        }
+        return splits;
+    }
+    
     /// Getter convenience functions
 
     // function getSplit(uint _index) public view returns (uint256) {

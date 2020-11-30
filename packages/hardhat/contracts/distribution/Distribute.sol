@@ -26,8 +26,8 @@ contract Distribute {
     event SetSplit(uint[] _split);
     event Allocated(uint _index, address _account, uint _amount);
     event AllocatedToken(address _tokenAddress, uint _index, address _account, uint _amount);
-    event Withdraw(uint _amount);
-    event WithdrawToken(address _token, uint _amount);
+    event Withdraw(address _to, uint _amount);
+    event WithdrawToken(address _token, address _to, uint _amount);
     event AddSplitAccount(address _account);
     event ClearSplitAccounts();
     event Received(uint _amount);
@@ -75,7 +75,7 @@ contract Distribute {
         emit SetSplit(_split);
     }
     
-    function validSplit(uint256[] memory _split) internal {
+    function validSplit(uint256[] memory _split) internal view {
         require(_split.length == splitAccounts.length, "Input size must match number of splitAccounts");
         uint sum = 0;
         for(uint i=0; i<_split.length; i++) {
@@ -118,7 +118,7 @@ contract Distribute {
             "Insufficient balance"
         );
         msg.sender.transfer(_amount);
-        emit Withdraw(_amount);
+        emit Withdraw(msg.sender, _amount);
         return ethAllocations[msg.sender];   // Return remaining balance
     }
 
@@ -126,7 +126,7 @@ contract Distribute {
         uint max = ethAllocations[msg.sender];
         msg.sender.transfer(max);
         ethAllocations[msg.sender] -= max;
-        emit Withdraw(max);
+        emit Withdraw(msg.sender, max);
         return ethAllocations[msg.sender];   // Return remaining balance
     }
     
@@ -137,7 +137,7 @@ contract Distribute {
         );
         IERC20(_tokenAddress).transfer(msg.sender, _amount);
         tokenAllocations[_tokenAddress][msg.sender] -= _amount;
-        emit WithdrawToken(_tokenAddress, _amount);
+        emit WithdrawToken(_tokenAddress, msg.sender,_amount);
         return tokenAllocations[_tokenAddress][msg.sender];   // Return remaining balance
     }
     

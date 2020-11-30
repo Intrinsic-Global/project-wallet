@@ -47,25 +47,25 @@ module.exports = {
       */
     },
     rinkeby: {
-      url: "https://rinkeby.infura.io/v3/625537f6d9c8478980570cd3c99f5623", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://rinkeby.infura.io/v3/59a5693a05d64fb7936b6c7f4b056f0c", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/625537f6d9c8478980570cd3c99f5623", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://mainnet.infura.io/v3/59a5693a05d64fb7936b6c7f4b056f0c", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     ropsten: {
-      url: "https://ropsten.infura.io/v3/625537f6d9c8478980570cd3c99f5623", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://ropsten.infura.io/v3/59a5693a05d64fb7936b6c7f4b056f0c", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     goerli: {
-      url: "https://goerli.infura.io/v3/625537f6d9c8478980570cd3c99f5623", //<---- YOUR INFURA ID! (or it won't work)
+      url: "https://goerli.infura.io/v3/59a5693a05d64fb7936b6c7f4b056f0c", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: mnemonic(),
       },

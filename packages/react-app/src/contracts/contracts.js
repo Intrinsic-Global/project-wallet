@@ -1,1 +1,1 @@
-module.exports = ["DistributingTreaty","Treaty","TreatyIndex","TreatyStateMachine","YourContract"];
+module.exports = ["DistributingTreaty","Treaty","TreatyIndex","TreatyStateMachine"];

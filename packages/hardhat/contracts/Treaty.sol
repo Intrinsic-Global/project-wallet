@@ -201,7 +201,6 @@ contract Treaty is TreatyStateMachine, Lockable {
     return signedTreatyText.length;
   }
 
-
   /////////////
   // Internal Functions
   ////////////

@@ -8,6 +8,11 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
     
   /// Split agreements ///
   uint[] public proposedSplit;
+  
+  //delete:
+  address[] addressArray;
+  uint256[] uintArray;
+  bytes32[] bytesArray;
 
   constructor(
     uint256 _id,
@@ -20,6 +25,7 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
     name = _name;
     unsignedTreatyText.push(_initialText);
     lawyerAddress = msg.sender;
+    
   }
 
 //   constructor() 
@@ -29,6 +35,7 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
 //     name = 'Name';
 //     lawyerAddress = msg.sender;
 //   }
+
 
   function registerAsSigner() public inState(States.Draft) stateChange() override {
     super.registerAsSigner();

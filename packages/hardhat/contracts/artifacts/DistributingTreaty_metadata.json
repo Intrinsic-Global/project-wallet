@@ -795,6 +795,45 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address[]",
+						"name": "_array",
+						"type": "address[]"
+					}
+				],
+				"name": "setAddressArray",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "_array",
+						"type": "bytes32[]"
+					}
+				],
+				"name": "setBytesArray",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "_array",
+						"type": "uint256[]"
+					}
+				],
+				"name": "setUintArray",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes32",
 						"name": "_hash",
 						"type": "bytes32"
@@ -1210,17 +1249,17 @@
 			]
 		},
 		"localhost/packages/hardhat/contracts/DistributingTreaty.sol": {
-			"keccak256": "0x6a54936fa1564dd014a72ef2987ec6099dc733a7d69ea870da371bbab007c84d",
+			"keccak256": "0xb7d30a47dcd29b561d6280188109d568e7dc3f5ab1050b4c46f5c1ad47dd57c4",
 			"urls": [
-				"bzz-raw://bc7616b62e4e6e4430e91441d622ae65c640cd6df54ee69fe1a0f5eb84cf072b",
-				"dweb:/ipfs/QmNogu4u1mgyeBEon9xhV2W69stTa4LrpoVwLx1x1Ywp3x"
+				"bzz-raw://99431d5c18f860b39c934c08fd101ccd63e70011d2d2999e52f0b7fafd599f38",
+				"dweb:/ipfs/QmVTAxsnkKup8uTrQ3C5Q1pm3mGvwras4q3dXrr9YN2ETZ"
 			]
 		},
 		"localhost/packages/hardhat/contracts/Treaty.sol": {
-			"keccak256": "0x4a282a4916e5c2fda9fd7c0161fe153de6a61cce6622dc4e04d6439fd7f9f9ff",
+			"keccak256": "0x8404a58bada3037180bc1c0ac4c69b5406d0aede4849c4b322dbf0adf9518b2b",
 			"urls": [
-				"bzz-raw://26aaa11baf5e2c550986625cd430f0fdfe702e38ed04ceeb505bff658b40d7a6",
-				"dweb:/ipfs/QmYwW7gTiWTGezEd3c6AwZCCFBcPqZU2WsqeVFfSXBrQVa"
+				"bzz-raw://860782cd6aba7b82c558a5f63e586f72eedecffda62fbad8d55f0bcd1d727eb8",
+				"dweb:/ipfs/QmTkqQXJFEh4Cyr1v1PotzUFK5PbfY89g8Bv8JAfWH8Pzy"
 			]
 		},
 		"localhost/packages/hardhat/contracts/TreatyStateMachine.sol": {
@@ -1245,10 +1284,10 @@
 			]
 		},
 		"localhost/packages/hardhat/contracts/distribution/DistributeEmbedded.sol": {
-			"keccak256": "0x2e7dc4d40c7a64f9991725e0b887551baaafdc0abfb2224642761dccafbfea0c",
+			"keccak256": "0xbbe3514be384531fa8f99a3d4f99894a010617d345ef1e7bfa6dbdf6fc7132d0",
 			"urls": [
-				"bzz-raw://9fbc3f682cbac4b4dcf5405da1a964d59d6a12e59746dee3cdbc9e04f676f184",
-				"dweb:/ipfs/QmT3nAdsGqtZNuCH12B9gG3X8vE8xWoA56sBBevRkmc9zH"
+				"bzz-raw://9b57e517beb08b42e43021987b46fe3ff059ac3108b9e79da8cd2dc0708d4e81",
+				"dweb:/ipfs/QmXDCALgeTe1rzVtvsAhLP17ZNBrgdeNhHKZKbyAfK5wWg"
 			]
 		},
 		"localhost/packages/hardhat/contracts/lib/StringUtils.sol": {
