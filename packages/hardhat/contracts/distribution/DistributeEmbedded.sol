@@ -9,6 +9,7 @@ Allocated funds can then be withdrawn.
 */
 
 pragma solidity ^0.7.5;
+pragma abicoder v2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -28,7 +29,7 @@ contract DistributeEmbedded {
         uint split;
     }
 
-    event SetSplit(uint256[] _split);
+    event SetSplit(address[] _splitAccounts, uint256[] _split);
     event Allocated(uint256 _index, address _account, uint256 _amount);
     event AllocatedToken(
         address _tokenAddress,
@@ -51,12 +52,13 @@ contract DistributeEmbedded {
     }
 
     constructor() {
-        addSplitAccount(msg.sender);
-        split[msg.sender] = 3300;
-        addSplitAccount(address(0x93f8dddd876c7dBE3323723500e83E202A7C96CC));
-        split[msg.sender] = 3300;
-        addSplitAccount(address(0xcCbE7717e986CCb546E50d16143757Aff9CEd4e4));
-        split[msg.sender] = 3300;
+        address[] memory initialAddresses = new address[](2);
+        uint[] memory initialSplits = new uint[](2);
+        initialAddresses[0] = msg.sender;
+        initialAddresses[1] = address(this);
+        initialSplits[0] = uint(5000);
+        initialSplits[1] = uint(5000);
+        setSplit(initialAddresses, initialSplits);
     }
 
     /// Add a new account for distribution of incoming funds
@@ -76,25 +78,30 @@ contract DistributeEmbedded {
 
     /// Set a new split ratio for distributing funds
 
-    function setSplit(uint256[] memory _split) internal {
+    function setSplit(address[] memory _splitAccounts, uint256[] memory _split) internal {
+        console.log("Split accounts set to [%s %s ...]", _splitAccounts[0], _splitAccounts[1]);
         console.log("Split set to [%s %s ...]", _split[0], _split[1]);
-        validSplit(_split);
+        validSplit(_splitAccounts, _split);
+        delete splitAccounts;
+        for (uint256 i = 0; i < _splitAccounts.length; i++) {
+            splitAccounts.push(_splitAccounts[i]);
+        }
         for (uint256 i = 0; i < _split.length; i++) {
             split[splitAccounts[i]] = _split[i];
         }
-        emit SetSplit(_split);
+        emit SetSplit(_splitAccounts, _split);
     }
 
-    function validSplit(uint256[] memory _split) internal view {
+    function validSplit(address[] memory _splitAddresses, uint256[] memory _split) internal view {
         require(
-            _split.length == splitAccounts.length,
-            "Input size must match number of splitAccounts"
+            _split.length == _splitAddresses.length,
+            "Must be one split % for each address"
         );
         uint256 sum = 0;
         for (uint256 i = 0; i < _split.length; i++) {
             sum += _split[i];
         }
-        require(sum == 100 * 10**splitDecimals, "Split must total 100");
+        require(sum == 100 * 10**splitDecimals, "Split must total 100.00");
     }
 
     /// Automatically distribute incoming funds
@@ -226,25 +233,15 @@ contract DistributeEmbedded {
 
     /// Getters
 
-    function getSplitAccounts() public view returns (address[10] memory) {
-        address[10] memory mSplitAccounts;
-        for(uint i=0; i<splitAccounts.length;i++){
-            mSplitAccounts[i] = splitAccounts[i];
-        }      
-        return mSplitAccounts;
+    function getSplitAccounts() public view returns (address[] memory) {  
+        return splitAccounts;
     }
 
-    function getSplits() public view returns (uint[10] memory) {
-        uint[10] memory splits;
-        for(uint i=0; i<splitAccounts.length;i++){
-            splits[i] = split[splitAccounts[i]];
+    function getSplit() public view returns (uint[] memory) {
+        uint[] memory mSplit = new uint[](splitAccounts.length);
+        for(uint i = 0; i < splitAccounts.length; i++){
+            mSplit[i] = split[splitAccounts[i]];
         }
-        return splits;
+        return mSplit;
     }
-    
-    /// Getter convenience functions
-
-    // function getSplit(uint _index) public view returns (uint256) {
-    //     return split[splitAccounts[_index]];
-    // }
 }

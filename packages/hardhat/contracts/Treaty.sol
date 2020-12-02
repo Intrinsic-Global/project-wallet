@@ -1,4 +1,5 @@
 pragma solidity ^0.7.5;
+pragma abicoder v2;
 
 import "./TreatyStateMachine.sol";
 import "./lib/StringUtils.sol";
@@ -59,6 +60,7 @@ contract Treaty is TreatyStateMachine, Lockable {
   //////////////
 
   function registerAsSigner() public inState(States.Draft) stateChange() virtual {
+    require(signatureState[msg.sender] == SignatureState.NotRegistered, "Already registered");
     signatureState[msg.sender] = SignatureState.Unsigned;
     signatureList.push(msg.sender);
     emit RegisterAsSigner(msg.sender);
@@ -281,4 +283,29 @@ contract Treaty is TreatyStateMachine, Lockable {
     }
     return signedHash[signedHash.length - 1];
   }
+
+  function getSignatureList() public view returns (address[10] memory) {
+    address[10] memory mSignatureList;
+    for(uint i=0; i<signatureList.length;i++){
+        mSignatureList[i] = signatureList[i];
+    }      
+    return mSignatureList;
+  }
+
+  function getUnsignedHashList() public view returns (bytes32[] memory) {
+    unsignedHash;
+  }
+
+  function getSignedHashList() public view returns (bytes32[] memory) {
+    return signedHash;
+  }
+
+  function getSignedTextList() public view returns (string[] memory) {
+    return signedTreatyText;
+  }
+
+  function getUnsignedTextList() public view returns (string[] memory) {
+    return unsignedTreatyText;
+  }
+
 }

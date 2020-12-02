@@ -1,19 +1,14 @@
 pragma solidity ^0.7.5;    
-
+pragma abicoder v2;
 
 import "./Treaty.sol";
 import "./distribution/DistributeEmbedded.sol";
 
 contract DistributingTreaty is Treaty, DistributeEmbedded {
     
-  /// Split agreements ///
-  uint[] public proposedSplit;
+  uint[] proposedSplit;
+  address[] proposedSplitAccounts;
   
-  //delete:
-  address[] addressArray;
-  uint256[] uintArray;
-  bytes32[] bytesArray;
-
   constructor(
     uint256 _id,
     string memory _name,
@@ -21,21 +16,11 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
   ) 
     Treaty(_id, _name, _initialText)
     DistributeEmbedded() {
-    id = _id;
-    name = _name;
-    unsignedTreatyText.push(_initialText);
-    lawyerAddress = msg.sender;
-    
+        proposedSplitAccounts.push(msg.sender);
+        proposedSplitAccounts.push(address(this));
+        proposedSplit.push(uint(2000));
+        proposedSplit.push(uint(8000));
   }
-
-//   constructor() 
-//     Treaty(1, 'Name', 'Initial text')
-//     DistributeEmbedded() {
-//     id = 1;
-//     name = 'Name';
-//     lawyerAddress = msg.sender;
-//   }
-
 
   function registerAsSigner() public inState(States.Draft) stateChange() override {
     super.registerAsSigner();
@@ -63,32 +48,34 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
     }
     return result;
   }
-  
-  function isSplitAccounts(address[] memory _splitAccounts) internal view returns (bool) {
-    if(splitAccounts.length == 0) {
+
+  function isProposedSplitAccounts(address[] memory _splitAccounts) internal view returns (bool) {
+    if(proposedSplitAccounts.length == 0) {
         return false;
     }
     bool result = true;
     for(uint i=0; i<_splitAccounts.length; i++) {
-        if(_splitAccounts[i] != splitAccounts[i]){
+        if(_splitAccounts[i] != proposedSplitAccounts[i]){
             result = false;
         }
     }
     return result;
   }
   
+  /**
+   @notice Accept a proposed split or propose a new split. Once a identical hash and split has been signed by every account on the signature list, the split becomes active.
+   */
   function signHashWithSplit(bytes32 _hash, address[] memory _splitAccounts, uint256[] memory _split) public inState(States.Active) stateChange() returns (bool) {
-    //require(_split.length == signatureList.length, "One split value required per signer");
-    
-    if(!isSplitAccounts(_splitAccounts)) {
+    if(!isProposedSplitAccounts(_splitAccounts)) {
       resetSignatures();
-      clearSplitAccounts();
+      delete proposedSplit;
+      delete proposedSplitAccounts;   
       for(uint i = 0; i < _splitAccounts.length; i++) {
-        addSplitAccount(_splitAccounts[i]);
+        proposedSplitAccounts.push(_splitAccounts[i]);
       }
     }
 
-    validSplit(_split);
+    validSplit(_splitAccounts, _split);
    
     if(!isProposedSplit(_split)) {
       resetSignatures();
@@ -97,9 +84,16 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
      
     bool allSignersApproved = super.signHash(_hash);
     if(allSignersApproved) {
-        setSplit(proposedSplit);
+        setSplit(proposedSplitAccounts, proposedSplit);
     }
     return allSignersApproved;
   }
 
+  function getProposedSplitAccounts() public view returns (address[] memory ) {
+    return proposedSplitAccounts;
+  }
+  
+  function getProposedSplit() public view returns (uint[] memory ) {
+    return proposedSplit;
+  }
 }

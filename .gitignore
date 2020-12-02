@@ -33,3 +33,10 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea
+
+packages/hardhat/contracts/Scratch.sol
+packages/subgraph/abis/Scratch.json
+packages/react-app/src/unused/
+nohup.out
+.gitignore
+yarn-chain.out
