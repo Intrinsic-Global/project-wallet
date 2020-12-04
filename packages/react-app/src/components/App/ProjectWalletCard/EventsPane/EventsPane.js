@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, List, Divider, Input, Card, Table, Tag } from "antd";
-import { Address } from "../..";
+import { Address } from "../../..";
 import { useContractReader, useEventListener, useBalance } from "../../../../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
 
@@ -10,6 +10,12 @@ const EventsPane = ({ readContracts, localProvider, mainnetProvider }) => {
   const setSplitEvents = useEventListener(readContracts, "DistributingTreaty", "SetSplit", localProvider, 1);
   const withdrawEvents = useEventListener(readContracts, "DistributingTreaty", "Withdraw", localProvider, 1);
   const receivedEvents = useEventListener(readContracts, "DistributingTreaty", "Received", localProvider, 1);
+
+  console.log("allocatedEvents :>> ", allocatedEvents);
+  console.log("signedByAllEvents :>> ", signedByAllEvents);
+  console.log("setSplitEvents :>> ", setSplitEvents);
+  console.log("withdrawEvents :>> ", withdrawEvents);
+  console.log("receivedEvents :>> ", receivedEvents);
 
   return (
     <div>
