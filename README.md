@@ -1,4 +1,4 @@
-# projectwallet
+# project-wallet
 
 Make agreements onchain including distribution of incoming ETH or ERC20 tokens.
 
@@ -6,9 +6,13 @@ A proposed distribution becomes active once all signers have agreed.
 
 Users can withdraw their share of any incoming funds.
 
-Agreements can be represented by text stored in the contract, or as a hash of content stored elsewhere, such as IPFS.
+Agreement details can be represented by text or a content hash.
 
 See https://github.com/grifma/treatify-web3 for an example of integration with IPFS / 3box.
+
+## status
+
+This project is for development / playing around purposes only.
 
 ---
 
@@ -43,3 +47,13 @@ yarn chain
 yarn deploy
 
 ```
+
+## screenshots
+
+![image](https://user-images.githubusercontent.com/13002548/101214073-4dd6e500-3673-11eb-86de-821f8aacc83f.png)
+
+![image](https://user-images.githubusercontent.com/13002548/101214088-56c7b680-3673-11eb-8e5d-0b14c035f1bf.png)
+
+![image](https://user-images.githubusercontent.com/13002548/101214100-5d562e00-3673-11eb-84d1-76fb1b18eb16.png)
+
+![image](https://user-images.githubusercontent.com/13002548/101214119-62b37880-3673-11eb-89dc-b05032929e39.png)
