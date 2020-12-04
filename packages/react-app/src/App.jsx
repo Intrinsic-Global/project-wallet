@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MailOutlined } from "@ant-design/icons";
 import { getDefaultProvider, InfuraProvider, JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
@@ -12,7 +12,7 @@ import { useExchangePrice, useGasPrice, useUserProvider, useContractLoader, useC
 import { Header, Account, Faucet, Ramp, Contract, GasGauge, Address } from "./components";
 import { Transactor } from "./helpers";
 import { parseEther, formatEther } from "@ethersproject/units";
-import { Subgraph, DistributeUI, Debug } from "./views"
+import { ProjectWalletCard } from "./views"
 
 import { INFURA_ID, ETHERSCAN_KEY } from "./constants";
 const { TabPane } = Tabs;
@@ -21,21 +21,14 @@ const DEBUG = true
 
 const blockExplorer = "https://etherscan.io/" // for xdai: "https://blockscout.com/poa/xdai/"
 
-// 🛰 providers
 if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
-//const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
-// const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
 const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/"+INFURA_ID)
-// ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID)
 
-// 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = "http://localhost:8545"; // for xdai: https://dai.poa.network
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
 const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
 if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
 const localProvider = new JsonRpcProvider(localProviderUrlFromEnv);
-
-
 
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
@@ -89,22 +82,21 @@ function App(props) {
 
   return (
     <div className="App">
-
       <Header />
-
       <BrowserRouter>
-
         <Menu style={{ textAlign:"center" }} selectedKeys={[route]} mode="horizontal">
-          <Menu.Item key="/distribute">
-            <Link onClick={()=>{setRoute("/distribute")}} to="/distribute">Project Wallet Contract</Link>
+          <Menu.Item key="/projectwalletcontract">
+            <Link onClick={()=>{setRoute("/projectwalletcontract")}} to="/projectwalletcontract">Project Wallet Contract</Link>
           </Menu.Item>
-          <Menu.Item key="/distributeui">
-            <Link onClick={()=>{setRoute("/distributeui")}} to="/distributeui">Project Wallet</Link>
+          <Menu.Item key="/projectwallet">
+            <Link onClick={()=>{setRoute("/projectwallet")}} to="/projectwallet">Project Wallet UI</Link>
           </Menu.Item>
         </Menu>
-
         <Switch>
           <Route exact path="/">
+            <Redirect to="/projectwallet" />
+          </Route>
+          <Route exact path="/treatyindex">
             <Contract
               name="TreatyIndex"
               signer={userProvider.getSigner()}
@@ -122,8 +114,8 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
           </Route>
-          <Route exact path="/debug">
-            <Debug
+          <Route path="/projectwallet">
+            <ProjectWalletCard
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
@@ -133,27 +125,6 @@ function App(props) {
               tx={tx}
               writeContracts={writeContracts}
               readContracts={readContracts}
-            />
-          </Route>
-          <Route path="/distributeui">
-            <DistributeUI
-              address={address}
-              userProvider={userProvider}
-              mainnetProvider={mainnetProvider}
-              localProvider={localProvider}
-              yourLocalBalance={yourLocalBalance}
-              price={price}
-              tx={tx}
-              writeContracts={writeContracts}
-              readContracts={readContracts}
-            />
-          </Route>
-          <Route path="/subgraph">
-            <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
             />
           </Route>
         </Switch>

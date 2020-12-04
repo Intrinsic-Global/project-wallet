@@ -31,7 +31,7 @@ describe("Distributing Treaty", function () {
     it("Should deploy DistributingTreaty", async function () {
       const DistributingTreaty = await ethers.getContractFactory("DistributingTreaty");
       
-      distributingTreaty = await DistributingTreaty.deploy(1, "Micro Print", "Micro Enterprise @ The Naval Store");
+      distributingTreaty = await DistributingTreaty.deploy(1, "Micro Print", "Collaborative Music Event @ The Naval Store");
     });
 
     describe("registerAsSigner()", function () {

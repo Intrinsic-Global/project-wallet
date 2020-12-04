@@ -6,7 +6,7 @@ export default function Header() {
     <a href="https://github.com/grifma/project-wallet" target="_blank" rel="noopener noreferrer">
       <PageHeader
         title="🏗 Project Wallet"
-        subTitle="rapid iteration from project to asset"
+        subTitle="project based agreements and income distribution"
         style={{ cursor: "pointer" }}
       />
     </a>

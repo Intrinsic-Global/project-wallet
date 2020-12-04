@@ -29,22 +29,11 @@ function humanReadableSignatureStatus(int) {
       return "Withdrawn";
     case 4:
       return "Broken";
+    default:
+      return "Unknown";
   }
 }
 // enum SignatureState { Unsigned, Signed, Withdrawn, Broken }
 
-function humanReadableTreatyType(int) {
-  const i = parseInt(int);
-  switch (i) {
-    case 0:
-      return "ProjectToFounder";
-    case 1:
-      return "ProjectToMentor";
-    case 2:
-      return "Volunteer";
-  }
-}
-
 exports.humanReadableTreatyStatus = humanReadableTreatyStatus;
 exports.humanReadableSignatureStatus = humanReadableSignatureStatus;
-exports.humanReadableTreatyType = humanReadableTreatyType;

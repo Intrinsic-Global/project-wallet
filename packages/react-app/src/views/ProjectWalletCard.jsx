@@ -1,71 +1,41 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button, List, Divider, Input, Card, DatePicker, Slider, Switch, Progress, Spin, InputNumber } from "antd";
-import { SyncOutlined, CloseOutlined } from '@ant-design/icons';
-import { Address, AddressInput, Balance } from "../components";
-import { EditSplitForm, ViewActiveSplit } from ".";
-import { useContractReader, useEventListener, useResolveName, useBalance, usePoller } from "../hooks";
+import React, { useState } from "react";
+import { Button, List, Divider, Input, Card, Table, Tag } from "antd";
+import { Address } from "../components";
+import { EditSplit, ViewSplit } from "../components";
+import { useContractReader, useEventListener, useBalance } from "../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
 import { ethers} from "ethers";
-import { validate } from "graphql";
-import {humanReadableTreatyStatus} from "../mappings/enumMappings";
+import { humanReadableTreatyStatus, humanReadableSignatureStatus } from "../mappings/enumMappings";
 
 const filterEmpty = (xs) => {
   if (xs == undefined) return [];
   if (xs.filter == undefined) {
-    console.log('xs - filter is undefined :>> ', xs);
     return [];
   }
   return xs.filter((x) => x.toString() != "0x0000000000000000000000000000000000000000" && x.toString() != "0x0000000000000000000000000000000000000000000000000000000000000000" && x.toString() != "");
 }
 
-export default function DistributeUI({address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
+export default function ProjectWalletCard({address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
   const [sendValue, setSendValue] = useState("0.01");
-  const lastHash = useContractReader(readContracts, "DistributingTreaty","getLastUnsignedHash");
-  
-  // const splitAccountsFromContract = useContractReader(readContracts, "DistributingTreaty","getSplitAccounts");
-  // const splitAccountsFiltered = filterEmpty(splitAccountsFromContract);
-  
-  // const splitsFromContract = useContractReader(readContracts, "DistributingTreaty","getSplit");
-  // const splitsFiltered = splitsFromContract && splitsFromContract.slice(0, splitAccountsFiltered && splitAccountsFiltered.length);
-  
-  const activeSplitAccounts = useContractReader(readContracts, "DistributingTreaty","getSplitAccounts");
-  const activeSplit = useContractReader(readContracts, "DistributingTreaty","getSplit");
-
-  // const getAddresses = useContractReader(readContracts, "Scratch", "getAddresses");
-  // const getAddressesDirect = useContractReader(readContracts, "Scratch", "getAddressesDirect");
-  // console.log('scratch getAddresses :>> ', getAddresses);
-  // console.log('scratch getAddressesDirect :>> ', getAddressesDirect);  
-  
-  const proposedSplitAccounts = useContractReader(readContracts, "DistributingTreaty", "getProposedSplitAccounts");
-  const proposedSplit = useContractReader(readContracts, "DistributingTreaty", "getProposedSplit");
-
-  console.log('getProposedSplitAccounts :>> ', proposedSplitAccounts);
-  console.log('getProposedSplit :>> ', proposedSplit);
-  const allocatedEth = useContractReader(readContracts, "DistributingTreaty","checkBalance")
+  const [withdrawValue, setWithdrawValue] = useState("0");
+  const [addText, setAddText] = useState("");
+  const [hashInput, setHashInput] = useState("");
+  const [selectedTab, setSelectedTab] = useState("signers");
+  const name = useContractReader(readContracts, "DistributingTreaty","name");
   const projectWalletAddress = readContracts && readContracts.DistributingTreaty.address;
   const projectWalletBalance = useBalance(localProvider, projectWalletAddress);
-  const name = useContractReader(readContracts, "DistributingTreaty","name");
+  const lastHash = useContractReader(readContracts, "DistributingTreaty","getLastUnsignedHash");
+  const activeSplitAccounts = useContractReader(readContracts, "DistributingTreaty","getSplitAccounts");
+  const activeSplit = useContractReader(readContracts, "DistributingTreaty","getSplit");
+  const proposedSplitAccounts = useContractReader(readContracts, "DistributingTreaty", "getProposedSplitAccounts");
+  const proposedSplit = useContractReader(readContracts, "DistributingTreaty", "getProposedSplit");
+  const allocatedEth = useContractReader(readContracts, "DistributingTreaty","checkBalance")
   const treatyState = humanReadableTreatyStatus(useContractReader(readContracts, "DistributingTreaty","treatyState"));
   const signers = filterEmpty(useContractReader(readContracts, "DistributingTreaty","getSignatureList"));
   const unsignedHashList = filterEmpty(useContractReader(readContracts, "DistributingTreaty","getUnsignedHashList"));
   const signedHashList = filterEmpty(useContractReader(readContracts, "DistributingTreaty","getSignedHashList"));
   const unsignedTextList = filterEmpty(useContractReader(readContracts, "DistributingTreaty","getUnsignedTextList"));
   const signedTextList = filterEmpty(useContractReader(readContracts, "DistributingTreaty","getSignedTextList"));
-  const [addText, setAddText] = useState("");
-  const [hashInput, setHashInput] = useState("");
-  console.log('signers :>> ', signers);
-  console.log('unsignedHashList :>> ', unsignedHashList);
-  console.log('signedHashList :>> ', signedHashList);
-  console.log('unsignedTextList :>> ', unsignedHashList);
-  console.log('signedTextList :>> ', signedTextList);
-  console.log('proposedSplitAccounts :>> ', proposedSplitAccounts);
-  console.log('proposedSplit :>> ', proposedSplit);
-
-
-  // console.log('splitAccountsFromContract :>> ', splitAccountsFromContract);
-  // console.log('splitsFromContract :>> ', splitsFromContract);
-  // console.log('splitAccountsFromContract filtered :>> ', splitAccountsFiltered);
-  // console.log('splitsFiltered :>> ', splitsFiltered);
 
   //📟 Listen for broadcast events
   const allocatedEvents = useEventListener(readContracts, "DistributingTreaty", "Allocated", localProvider, 1);
@@ -73,104 +43,130 @@ export default function DistributeUI({address, mainnetProvider, userProvider, lo
   const setSplitEvents = useEventListener(readContracts, "DistributingTreaty", "SetSplit", localProvider, 1);
   const withdrawEvents = useEventListener(readContracts, "DistributingTreaty", "Withdraw", localProvider, 1);
   const receivedEvents = useEventListener(readContracts, "DistributingTreaty", "Received", localProvider, 1);
-  console.log("📟 allocatedEvents events:",allocatedEvents)
-  console.log("📟 signedByAllEvents events:",signedByAllEvents)
-  console.log("📟 setSplitEvents events:",setSplitEvents)
 
-  return (
-    <div>
-      <div style={{border:"1px solid #cccccc", padding:16, width:400, margin:"auto",marginTop:64,overflow:"hidden"}}>
-        <h2>Project Wallet <Address
-            value={readContracts?readContracts.DistributingTreaty.address:readContracts}
-            ensProvider={mainnetProvider}
-            fontSize={16}
-        /></h2>
-        <h2>{name}</h2>
-        <h4>Balance: {projectWalletBalance && formatEther(projectWalletBalance)}</h4>
-        <h4>Available to withdraw: {allocatedEth && formatEther(allocatedEth)}</h4>
-        <Divider/>
-        <h3>Proposed split accounts</h3>
-        {proposedSplitAccounts && proposedSplitAccounts.map && proposedSplitAccounts.map( x => (
-          <div>{x}</div>
-          // <div>JSON.stringify({x}.toString())</div>
-        ))}
-        <h3>Proposed split</h3>
-        {proposedSplit && proposedSplit.map && proposedSplit.map( x => (
-          <div>{Number(x)}</div>
-          // <div>JSON.stringify({x}.toString())</div>
-        ))}
-        <Divider/>
-        <h3>{treatyState}</h3>
-        <Button onClick={() => {
-          tx( writeContracts.DistributingTreaty.registerAsSigner())
-        }}>Register as Signer</Button>
-        <Button onClick={() => {
-          tx( writeContracts.DistributingTreaty.makeActive())
-        }}>Make Active</Button>
+  const tabList = [
+    {
+      key: 'signers',
+      tab: 'Signers',
+    },
+    {
+      key: 'content',
+      tab: 'Content',
+    },
+    {
+      key: 'activeSplit',
+      tab: 'Active Split',
+    },
+    {
+      key: 'proposedSplit',
+      tab: 'Proposed Split',
+    },
+    {
+      key: 'depositWithdrawalsTab',
+      tab: 'Deposits and Withdrawals',
+    },
+  ];
 
-        <Divider/>
-        <h3>Signers</h3>
-        <div
-          style={{"margin": "4px", "display": "flex", "flex-direction": "row", "justify-content": "center"}}
-        >
-          {
-            signers.map(
-              x => {
-                return (
-                    <Address
-                        value={x}
-                        ensProvider={mainnetProvider}
-                        fontSize={16}
-                    />
+  const boxStyle = {
+    border:"1px solid #cccccc", 
+    padding:16, 
+    width:400, 
+    margin:"auto",
+    marginTop:32,
+    overflow:"hidden"
+  }
+  
+  const SignersTab = () => {
+    return (
+        <div style={boxStyle}>
+            <h3>State: {treatyState}</h3>
+            <Divider/>
+            <Button onClick={() => {
+              tx( writeContracts.DistributingTreaty.registerAsSigner())
+            }}>Register as Signer</Button>
+            <Button onClick={() => {
+              tx( writeContracts.DistributingTreaty.makeActive())
+            }}>Make Active</Button>
+
+            <Divider/>
+            <h3>Signers</h3>
+            <div
+              style={{"margin": "4px", "display": "flex", "flexDirection": "row", "justifyContent": "center"}}
+            >
+              {
+                signers.map(
+                  (x, i) => {
+                    return (
+                        <Address
+                            key={`signer${i}`}
+                            value={x}
+                            ensProvider={mainnetProvider}
+                            fontSize={16}
+                        />
+                    )
+                  }
                 )
               }
-            )
-          }
-        </div>
-        <Divider/>
-        <h3>Unsigned Hash List</h3>
-        {
-          unsignedHashList.map(
-            x => {
-              return (
-                <div style={{color: "DarkGoldenRod"}}>{x}</div>
-              )
-            }
-          )
-        }
-        <h3>Signed Hash List</h3>
-        {
-          signedHashList.map(
-            x => {
-              return (
-                <div style={{color: "DarkGreen"}}>{x}</div>
-              )
-            }
-          )
-        }
-        <Divider/>
-        <h3>Unsigned Text</h3>
-        {
-          unsignedTextList.map(
-            x => {
-              return (
-                <div style={{color: "DarkGoldenRod"}}>{x}</div>
-              )
-            }
-          )
-        }
-        <h3>Signed Text</h3>
-        {
-          signedTextList.map(
-            x => {
-              return (
-                <div style={{color: "DarkGreen"}}>{x}</div>
-              )
-            }
-          )
-        }
-          <Divider />
+            </div>
+          </div>
+      )
+  }
+  
+  const AgreementContentTable = ({contentList}) => {
 
+    const columns = [
+      {
+        title: 'Entry',
+        dataIndex: 'entry',
+        key: 'entry',
+        render: text => <p>{text}</p>
+      },
+      {
+        title: 'Signed By',
+        dataIndex: 'signedBy',
+        key: 'signedBy',
+        render: signatures => (
+          <span>
+            {signatures.map( 
+              x =>
+              (
+                <Tag color="geekblue" key={x}>
+                  {x}
+                </Tag>
+              )
+            )}
+          </span>
+        )
+      }
+    ]
+    const data = contentList && contentList.map(
+      (x, i) => (
+        {
+          key: i,
+          entry: x,
+          signedBy: []
+        }
+      ));
+    return (
+      <div>
+          <Table columns={columns} dataSource={data} />
+      </div>
+    )
+  }
+
+  const ContentTab = () => {
+    const unsignedContent = unsignedTextList.concat(unsignedHashList);
+    const signedContent = signedTextList.concat(signedHashList);
+    return (
+      <div>
+        <div>
+          <h3>Unsigned Content</h3>
+          <AgreementContentTable contentList={unsignedContent} />
+        </div>
+        <div>
+          <h3>Signed Content</h3>
+          <AgreementContentTable contentList={signedContent} />
+        </div> 
         <div style={{margin:8, display:"flex", "flexDirection":"row"}}>
           <Input value={addText} onChange={(e)=>{
             setAddText(e.target.value);
@@ -190,25 +186,31 @@ export default function DistributeUI({address, mainnetProvider, userProvider, lo
             tx( writeContracts.DistributingTreaty.signHash(hashInput));
           }}>Write Hash to Chain and Sign</Button>
         </div>
+      </div>
+      )
+  }
+  
+  const ActiveSplitTab = () => {
+    return (
+      <div style={boxStyle}>
+        <ViewSplit splitAccounts={activeSplitAccounts} split={activeSplit} mainnetProvider={mainnetProvider} />
+      </div>
+      )
+  }
 
-       {/* <Button onClick={() => {
-          addText == ""
-          ? window.alert("Enter text")
-          : setHashInput(ethers.utils.id(addText))
-        }}>Get Hash</Button> */}
+  const ProposedSplitTab = () => {
+    return (
+      <div style={boxStyle}>
+        <EditSplit tx={tx} writeContracts={writeContracts} lastHash={lastHash} splitAccounts={proposedSplitAccounts} split={proposedSplit} mainnetProvider={mainnetProvider} />
+      </div>
+      )
+  }
 
-        <Divider/>
-        <h4>Last hash: {lastHash}</h4>
-        <Divider/>
-        <ViewActiveSplit splitAccounts={activeSplitAccounts} split={activeSplit} mainnetProvider={mainnetProvider}/>
-   
-        <Divider/>
-        {/* <EditSplitForm tx={tx} writeContracts={writeContracts} lastHash={lastHash} splitAccounts={splitAccountsFiltered} splits={splitsFiltered} mainnetProvider={mainnetProvider}/> */}
-        <EditSplitForm tx={tx} writeContracts={writeContracts} lastHash={lastHash} splitAccounts={proposedSplitAccounts} split={proposedSplit} mainnetProvider={mainnetProvider}/>
-          
-
-        <Divider />
-
+  const DepositWithdrawalsTab = () => {
+    return (
+      <div style={boxStyle}>
+        <h4>Balance: {projectWalletBalance && formatEther(projectWalletBalance)}</h4>
+        <h4>Available to withdraw: {allocatedEth && formatEther(allocatedEth)}</h4>
         <div style={{margin:8, display:"flex", "flexDirection":"row"}}>
           <Input value={sendValue} onChange={(e)=>{
             setSendValue(e.target.value)
@@ -220,14 +222,26 @@ export default function DistributeUI({address, mainnetProvider, userProvider, lo
             });
           }}>💵 Send ETH</Button>
         </div>
+        <div style={{margin:8, display:"flex", "flexDirection":"row"}}>
+          <Input value={withdrawValue} onChange={(e)=>{
+            setWithdrawValue(e.target.value)
+          }}/>
+          <Button onClick={()=>{
+            tx( writeContracts.DistributingTreaty.withdraw(withdrawValue))
+          }}>💵 Withdraw ETH</Button>
+        </div>
         <Button onClick={() => {
           tx( writeContracts.DistributingTreaty.withdrawMax())
-        }}>💵 Withdraw {allocatedEth && formatEther(allocatedEth)} ETH</Button>
+        }}>💵 Withdraw all ({allocatedEth && formatEther(allocatedEth)}) ETH</Button>
       </div>
-      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
-        <h2>Events:</h2>
-        <div style={{display: "flex", "flexDirection": "row"}}>
+    )
+  }
 
+  const EventsPane = ({receivedEvents}) => {
+    return (
+     <div>
+      <div style={{ width:600, margin: "auto", marginTop:32, paddingBottom:32 }}>
+        <div style={{display: "flex", "flexDirection": "row"}}>
         <List
           bordered
           dataSource={receivedEvents}
@@ -298,7 +312,6 @@ export default function DistributeUI({address, mainnetProvider, userProvider, lo
             bordered
             dataSource={withdrawEvents}
             renderItem={(item) => {
-              console.log('withdraw item :>> ', item);
               return (
                 <List.Item key={item.blockNumber+"_"+item._amount}>
                   Withdraw <Address
@@ -315,5 +328,54 @@ export default function DistributeUI({address, mainnetProvider, userProvider, lo
           </div>
       </div>
     </div>
+    )
+  }
+  
+  const contentList = {
+    signers: <SignersTab/>,
+    content: <ContentTab/>,
+    activeSplit: <ActiveSplitTab/>,
+    proposedSplit: <ProposedSplitTab/>,
+    depositWithdrawalsTab: <DepositWithdrawalsTab/>
+  };
+
+  const onTabChange = (key, type) => {
+    setSelectedTab(key);
+  };
+
+  const cardTitle = name;
+  const htmlCardTitle = (
+    <div>
+      <h2>{name}&nbsp;
+        <Address
+          value={readContracts?readContracts.DistributingTreaty.address:readContracts}
+          ensProvider={mainnetProvider}
+          fontSize={16}
+        />
+      </h2>
+    </div>
+  );
+
+  return (
+    <div>
+          <Card
+            title={htmlCardTitle}
+            extra={<a href="#">More</a>}
+            tabList={tabList}
+            activeTabKey={selectedTab}
+            onTabChange={key => {
+              return onTabChange(key, 'key');
+            }}
+            >
+              {contentList[selectedTab]}
+          </Card>
+          <Card
+            title="Events"
+            extra={<a href="#">More</a>}
+            >
+            <EventsPane receivedEvents={receivedEvents} />
+          </Card>
+    </div>
   );
 }
+

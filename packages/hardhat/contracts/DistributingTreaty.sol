@@ -29,11 +29,13 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
   function signTreaty() public inState(States.Active) stateChange() override returns (bool) {
     super.signTreaty();
     delete proposedSplit;
+    delete proposedSplitAccounts;
   }
 
   function signHash(bytes32 _hash) public inState(States.Active) stateChange() override returns (bool) {
     super.signHash(_hash);
     delete proposedSplit;
+    delete proposedSplitAccounts;
   }  
   
   function isProposedSplit(uint256[] memory _split) internal view returns (bool) {
