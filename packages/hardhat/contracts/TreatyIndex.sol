@@ -1,8 +1,9 @@
 pragma solidity ^0.7.5;
+pragma abicoder v2;
 
 import "./access/Lockable.sol";
 
-// import "./DistributingTreaty.sol";
+import "./DistributingTreaty.sol";
 // import "./Treaty.sol";
 
 contract TreatyIndex is Lockable {
@@ -12,6 +13,14 @@ contract TreatyIndex is Lockable {
     event AddTreaty(address indexed _treatyAddress);
     event DeleteTreaty(address indexed _treatyAddress);
     event Rename(string indexed _oldName, string indexed _newName);
+
+    struct Details {
+        uint id;
+        string name;
+        uint numSigners;
+        uint state;
+        address addr;
+    }
 
     constructor(string memory _name) public {
         name = _name;
@@ -46,17 +55,52 @@ contract TreatyIndex is Lockable {
         return treatyIndex;
     }
 
-    // function deployDistributingTreaty(
-    //   uint256 _id,
-    //   string memory _name,
-    //   string memory _initialText)
-    //   public
-    //   returns (address)
+    function deployDistributingTreaty(
+      uint256 _id,
+      string memory _name,
+      string memory _initialText)
+      public
+      returns (address)
+    {
+        DistributingTreaty distributingTreaty = new DistributingTreaty(_id, _name, _initialText);
+        addTreaty(address(distributingTreaty));
+        return address(distributingTreaty);
+    }
+
+    // function getDistributingTreatyContracts(
+    // )
+    //     public 
+    //     view
+    //     returns (DistributingTreaty[] memory)
     // {
-    //     DistributingTreaty distributingTreaty = new DistributingTreaty(_id, _name, _initialText);
-    //     addTreaty(address(distributingTreaty));
-    //     return address(distributingTreaty);
+    //     DistributingTreaty[] memory dt = new DistributingTreaty[](treatyIndex.length);
+    //     for(uint i=0; i < treatyIndex.length; i++){
+    //         dt[i] = DistributingTreaty(payable(treatyIndex[i]));
+    //     }
+    //     return dt;
     // }
+
+    function getDistributingTreatyDetails(
+    )
+        public 
+        view
+        returns (Details[] memory)
+    {
+
+        DistributingTreaty[] memory dt = new DistributingTreaty[](treatyIndex.length);
+        Details[] memory details = new Details[](treatyIndex.length);
+        for(uint i=0; i < treatyIndex.length; i++){
+            dt[i] = DistributingTreaty(payable(treatyIndex[i]));
+            details[i] = Details({
+                name: dt[i].name(),
+                id: dt[i].id(),
+                state: uint(dt[i].treatyState()),
+                numSigners: dt[i].getNumSignatures(),
+                addr: address(treatyIndex[i])
+             });
+        }
+        return details;
+    }
 
     // function deployTreaty(
     //   uint256 _id,

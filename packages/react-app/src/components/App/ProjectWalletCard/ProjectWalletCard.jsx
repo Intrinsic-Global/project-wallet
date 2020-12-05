@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { Card } from "antd";
 import { Address } from "../..";
-import { useContractReader } from "../../../hooks";
+import { useContractReader, useContractExistsAtAddress, useCustomContractLoader } from "../../../hooks";
 import { DepositsWithdrawals } from "./DepositsWithdrawals";
 import { SplitContainer } from "./Split/SplitContainer";
 import { EventsPane } from "./EventsPane";
@@ -9,8 +10,16 @@ import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
 
 export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, readContracts, writeContracts }) {
+  const { projectWalletAddress } = useParams();
+  console.log("projectWalletAddress :>> ", projectWalletAddress);
+  const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
+  console.log("[projectwalletcard] contractExists :>> ", contractExists);
+  const projectWalletContract = useCustomContractLoader(localProvider, "DistributingTreaty", projectWalletAddress);
+  console.log("[projectwalletcard] projectWalletContract :>> ", projectWalletContract);
+  const name = useContractReader(projectWalletContract, "DistributingTreaty", "name");
+  console.log("[projectwalletcard] name :>> ", name);
   const [selectedTab, setSelectedTab] = useState("signers");
-  const name = useContractReader(readContracts, "DistributingTreaty", "name");
+  // const name = useContractReader(readContracts, "DistributingTreaty", "name");
   console.log("mainnetProvider :>> ", mainnetProvider);
 
   const onTabChange = key => {
