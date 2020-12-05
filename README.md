@@ -54,6 +54,6 @@ yarn deploy
 
 ![image](https://user-images.githubusercontent.com/13002548/101214088-56c7b680-3673-11eb-8e5d-0b14c035f1bf.png)
 
-![image](https://user-images.githubusercontent.com/13002548/101214100-5d562e00-3673-11eb-84d1-76fb1b18eb16.png)
+![image](https://user-images.githubusercontent.com/13002548/101243552-1f035200-36f9-11eb-98ec-254a569e98b8.png)
 
 ![image](https://user-images.githubusercontent.com/13002548/101214119-62b37880-3673-11eb-89dc-b05032929e39.png)
