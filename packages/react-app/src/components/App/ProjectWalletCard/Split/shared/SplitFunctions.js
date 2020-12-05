@@ -22,6 +22,10 @@ const indexToColor = index => {
   return colors[index % Object.keys(colors).length];
 };
 
+export const splitPercentFormatter = value => {
+  return `${value / 100}%`;
+};
+
 export const formatPieChartData = splitObjects => {
   const result = splitObjects.map((x, i) => {
     return { title: x.account, value: x.split, color: indexToColor(i) };

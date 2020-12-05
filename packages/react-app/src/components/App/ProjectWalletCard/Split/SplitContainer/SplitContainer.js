@@ -16,12 +16,12 @@ const SplitContainer = ({ readContracts, writeContracts, tx, mainnetProvider }) 
   console.log("readContracts :>> ", readContracts);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div id="activesplitcontainer" style={{ flex: "1" }}>
+    <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div id="activesplitcontainer" style={{ flex: "1 0 200px", margin: "0 10px" }}>
         <h3>Active Distribution</h3>
         <ViewSplit splitAccounts={activeSplitAccounts} split={activeSplit} mainnetProvider={mainnetProvider} />
       </div>
-      <div id="proposedsplitcontainer" style={{ flex: "1" }}>
+      <div id="proposedsplitcontainer" style={{ flex: "1 0 200px", margin: "0 10px" }}>
         <h3>Proposed Distribution</h3>
         <EditSplit
           tx={tx}
