@@ -65,7 +65,12 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
   const DepositWithdrawalsTab = () => {
     return (
       <div style={boxStyle}>
-        <DepositsWithdrawals readContracts={readContracts} writeContracts={writeContracts} tx={tx} />
+        <DepositsWithdrawals
+          readContracts={readContracts}
+          writeContracts={writeContracts}
+          tx={tx}
+          localProvider={localProvider}
+        />
       </div>
     );
   };

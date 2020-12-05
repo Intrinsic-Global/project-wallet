@@ -91,7 +91,7 @@ function App(props) {
     <div className="App">
       <Header />
       <BrowserRouter>
-        <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
+        {/* <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/projectwalletcontract">
             <Link
               onClick={() => {
@@ -112,7 +112,7 @@ function App(props) {
               Project Wallet UI
             </Link>
           </Menu.Item>
-        </Menu>
+        </Menu> */}
         <Switch>
           <Route exact path="/">
             <Redirect to="/projectwallet" />
