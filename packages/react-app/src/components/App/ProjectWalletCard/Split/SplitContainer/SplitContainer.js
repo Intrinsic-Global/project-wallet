@@ -1,24 +1,18 @@
 import React from "react";
-import { useContractReader } from "../../../../../hooks";
+import { useCustomContractReader } from "../../../../../hooks";
 import { EditSplit } from "../EditSplit";
 import { ViewSplit } from "../ViewSplit";
 
-const SplitContainer = ({ readContracts, projectWalletService, mainnetProvider }) => {
-  const activeSplitAccounts = useContractReader(readContracts, "DistributingTreaty", "getSplitAccounts");
-  const activeSplit = useContractReader(readContracts, "DistributingTreaty", "getSplit");
-  const proposedSplitAccounts = useContractReader(
-    readContracts,
-    "DistributingTreaty",
-    "getProposedSplitAccounts",
-    999999999,
-  );
-  const proposedSplit = useContractReader(readContracts, "DistributingTreaty", "getProposedSplit", [], 999999999);
-  const lastHash = useContractReader(readContracts, "DistributingTreaty", "getLastUnsignedHash");
+const SplitContainer = ({ contract, projectWalletService, mainnetProvider }) => {
+ const activeSplitAccounts = useCustomContractReader(contract, "getSplitAccounts");
+  const activeSplit = useCustomContractReader(contract, "getSplit");
+  const proposedSplitAccounts = useCustomContractReader(contract, "getProposedSplitAccounts");
+  const proposedSplit = useCustomContractReader(contract, "getProposedSplit");
+  const lastHash = useCustomContractReader(contract, "getLastUnsignedHash");
   // console.log("proposedSplit :>> ", proposedSplit);
   // console.log("proposedSplitAccounts :>> ", proposedSplitAccounts);
   // console.log("activeSplit :>> ", activeSplit);
   // console.log("activeSplitAccounts :>> ", activeSplitAccounts);
-
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <div id="activesplitcontainer" style={{ flex: "1 0 200px", margin: "0 10px" }}>

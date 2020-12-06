@@ -21,6 +21,7 @@ import { Header, Account, Faucet, Ramp, Contract, GasGauge, Address } from "./co
 import { Transactor } from "./helpers";
 import { parseEther, formatEther } from "@ethersproject/units";
 import { ProjectWalletCard } from "./components/App/ProjectWalletCard";
+import { ProjectWalletIndex } from "./components/App/ProjectWalletIndex";
 
 // import { REACT_APP_INFURA_ID, REACT_APP_ETHERSCAN_KEY } from "./constants";
 import config from "./config";
@@ -106,6 +107,16 @@ function App(props) {
               Project Wallet Contract
             </Link>
           </Menu.Item>
+          <Menu.Item key="/projectwalletindex">
+            <Link
+              onClick={() => {
+                setRoute("/projectwalletindex");
+              }}
+              to="/projectwalletindex"
+            >
+              Project Wallet Index
+            </Link>
+          </Menu.Item>
           <Menu.Item key="/projectwallet">
             <Link
               onClick={() => {
@@ -119,7 +130,7 @@ function App(props) {
         </Menu> */}
         <Switch>
           <Route exact path="/">
-            <Redirect to="/projectwallet" />
+            <Redirect to="/projectwalletindex" />
           </Route>
           <Route exact path="/treatyindex">
             <Contract
@@ -139,8 +150,35 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
           </Route>
+          <Route path="/projectwallet/:projectWalletAddress">
+            <ProjectWalletCard
+              name="DistributingTreaty"
+              address={address}
+              userProvider={userProvider}
+              mainnetProvider={mainnetProvider}
+              localProvider={localProvider}
+              yourLocalBalance={yourLocalBalance}
+              price={price}
+              tx={tx}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
+            />
+          </Route>
           <Route path="/projectwallet">
             <ProjectWalletCard
+              address={address}
+              userProvider={userProvider}
+              mainnetProvider={mainnetProvider}
+              localProvider={localProvider}
+              yourLocalBalance={yourLocalBalance}
+              price={price}
+              tx={tx}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
+            />
+          </Route>
+          <Route path="/projectwalletindex">
+            <ProjectWalletIndex
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
