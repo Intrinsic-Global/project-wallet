@@ -7,11 +7,13 @@ import { SplitContainer } from "./Split/SplitContainer";
 import { EventsPane } from "./EventsPane";
 import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
+import { ProjectWalletService } from "../../../utils";
 
 export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, readContracts, writeContracts }) {
   const [selectedTab, setSelectedTab] = useState("signers");
   const name = useContractReader(readContracts, "DistributingTreaty", "name");
   console.log("mainnetProvider :>> ", mainnetProvider);
+  const projectWalletService = new ProjectWalletService(writeContracts, tx);
 
   const onTabChange = key => {
     setSelectedTab(key);
@@ -50,8 +52,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
       <div style={boxStyle}>
         <Signers
           readContracts={readContracts}
-          writeContracts={writeContracts}
-          tx={tx}
+          projectWalletService={projectWalletService}
           mainnetProvider={mainnetProvider}
         />
       </div>
@@ -59,7 +60,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
   };
 
   const AgreementContentTab = () => {
-    return <AgreementContent readContracts={readContracts} writeContracts={writeContracts} tx={tx} />;
+    return <AgreementContent readContracts={readContracts} projectWalletService={projectWalletService} />;
   };
 
   const DepositWithdrawalsTab = () => {
@@ -67,9 +68,9 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
       <div style={boxStyle}>
         <DepositsWithdrawals
           readContracts={readContracts}
-          writeContracts={writeContracts}
-          tx={tx}
+          projectWalletService={projectWalletService}
           localProvider={localProvider}
+          projectWalletService={projectWalletService}
         />
       </div>
     );
@@ -78,7 +79,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
   const DistributionTab = () => {
     return (
       // <div style={boxStyle}>
-      <SplitContainer readContracts={readContracts} writeContracts={writeContracts} tx={tx} />
+      <SplitContainer readContracts={readContracts} projectWalletService={projectWalletService} />
       // </div>
     );
   };

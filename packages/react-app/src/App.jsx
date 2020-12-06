@@ -22,7 +22,11 @@ import { Transactor } from "./helpers";
 import { parseEther, formatEther } from "@ethersproject/units";
 import { ProjectWalletCard } from "./components/App/ProjectWalletCard";
 
-import { INFURA_ID, ETHERSCAN_KEY } from "./constants";
+// import { REACT_APP_INFURA_ID, REACT_APP_ETHERSCAN_KEY } from "./constants";
+import config from "./config";
+
+console.log("config :>> ", config);
+
 const { TabPane } = Tabs;
 
 const DEBUG = true;
@@ -30,7 +34,7 @@ const DEBUG = true;
 const blockExplorer = "https://etherscan.io/"; // for xdai: "https://blockscout.com/poa/xdai/"
 
 if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
-const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID);
+const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + config.REACT_APP_INFURA_ID);
 
 const localProviderUrl = "http://localhost:8545"; // for xdai: https://dai.poa.network
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
@@ -224,7 +228,7 @@ const web3Modal = new Web3Modal({
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
-        infuraId: INFURA_ID,
+        infuraId: config.REACT_APP_INFURA_ID,
       },
     },
   },

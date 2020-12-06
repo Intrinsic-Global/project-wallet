@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Input, Form } from "antd";
 import { useBalance, useContractReader } from "../../../../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
 import styled from "styled-components";
+import { ProjectWalletService } from "../../../../utils";
 
 const SubmitButton = styled(Button)`
   margin-bottom: 2px;
@@ -67,7 +68,7 @@ const SectionedFormItem = styled.li`
   }
 `;
 
-const DepositsWithdrawals = ({ readContracts, writeContracts, tx, localProvider }) => {
+const DepositsWithdrawals = ({ readContracts, localProvider, projectWalletService }) => {
   const [sendValue, setSendValue] = useState("");
   const [withdrawValue, setWithdrawValue] = useState("");
   const projectWalletAddress = readContracts && readContracts.DistributingTreaty.address;
@@ -107,10 +108,7 @@ const DepositsWithdrawals = ({ readContracts, writeContracts, tx, localProvider 
         </SectionedFormList>
         <DepositButton
           onClick={() => {
-            tx({
-              to: writeContracts.DistributingTreaty.address,
-              value: parseEther(sendValue),
-            });
+            projectWalletService.deposit(sendValue);
           }}
         >
           💵 Deposit ETH
@@ -131,14 +129,14 @@ const DepositsWithdrawals = ({ readContracts, writeContracts, tx, localProvider 
         </SectionedFormList>
         <WithdrawButton
           onClick={() => {
-            tx(writeContracts.DistributingTreaty.withdraw(withdrawValue));
+            projectWalletService.withdraw(parseEther(withdrawValue));
           }}
         >
           💵 Withdraw ETH
         </WithdrawButton>
         <WithdrawButton
           onClick={() => {
-            tx(writeContracts.DistributingTreaty.withdrawMax());
+            projectWalletService.withdrawMax();
           }}
         >
           💵 Withdraw all ({allocatedEth && formatEther(allocatedEth)}) ETH

@@ -3,17 +3,16 @@ import { useContractReader } from "../../../../../hooks";
 import { EditSplit } from "../EditSplit";
 import { ViewSplit } from "../ViewSplit";
 
-const SplitContainer = ({ readContracts, writeContracts, tx, mainnetProvider }) => {
+const SplitContainer = ({ readContracts, projectWalletService, mainnetProvider }) => {
   const activeSplitAccounts = useContractReader(readContracts, "DistributingTreaty", "getSplitAccounts");
   const activeSplit = useContractReader(readContracts, "DistributingTreaty", "getSplit");
   const proposedSplitAccounts = useContractReader(readContracts, "DistributingTreaty", "getProposedSplitAccounts");
   const proposedSplit = useContractReader(readContracts, "DistributingTreaty", "getProposedSplit");
   const lastHash = useContractReader(readContracts, "DistributingTreaty", "getLastUnsignedHash");
-  console.log("proposedSplit :>> ", proposedSplit);
-  console.log("proposedSplitAccounts :>> ", proposedSplitAccounts);
-  console.log("activeSplit :>> ", activeSplit);
-  console.log("activeSplitAccounts :>> ", activeSplitAccounts);
-  console.log("readContracts :>> ", readContracts);
+  // console.log("proposedSplit :>> ", proposedSplit);
+  // console.log("proposedSplitAccounts :>> ", proposedSplitAccounts);
+  // console.log("activeSplit :>> ", activeSplit);
+  // console.log("activeSplitAccounts :>> ", activeSplitAccounts);
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -24,8 +23,7 @@ const SplitContainer = ({ readContracts, writeContracts, tx, mainnetProvider }) 
       <div id="proposedsplitcontainer" style={{ flex: "1 0 200px", margin: "0 10px" }}>
         <h3>Proposed Distribution</h3>
         <EditSplit
-          tx={tx}
-          writeContracts={writeContracts}
+          projectWalletService={projectWalletService}
           lastHash={lastHash}
           splitAccounts={proposedSplitAccounts}
           split={proposedSplit}

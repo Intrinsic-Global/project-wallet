@@ -6,7 +6,15 @@ import { PieChart } from "react-minimal-pie-chart";
 import { prepareSplitObjects, formatPieChartData, splitPercentFormatter } from "../shared/SplitFunctions";
 import { useEffect } from "react";
 
-export default function EditSplit({ tx, writeContracts, lastHash, splitAccounts, split, mainnetProvider }) {
+export default function EditSplit({
+  tx,
+  writeContracts,
+  lastHash,
+  splitAccounts,
+  split,
+  mainnetProvider,
+  projectWalletService,
+}) {
   useEffect(() => {
     setSplitObjects(prepareSplitObjects(splitAccounts, split));
   }, [split, splitAccounts]);
@@ -26,7 +34,7 @@ export default function EditSplit({ tx, writeContracts, lastHash, splitAccounts,
       splitAccountsArray.push(x.account);
       splitsArray.push(x.split);
     });
-    tx(writeContracts.DistributingTreaty.signHashWithSplit(lastHash, splitAccountsArray, splitsArray));
+    projectWalletService.signHashWithSplit(lastHash, splitAccountsArray, splitsArray);
   };
 
   const validateSplitObjects = splitObjects => {
