@@ -6,20 +6,18 @@ import { PieChart } from "react-minimal-pie-chart";
 import { prepareSplitObjects, formatPieChartData, splitPercentFormatter } from "../shared/SplitFunctions";
 import { useEffect } from "react";
 
-export default function EditSplit({
-  tx,
-  writeContracts,
-  lastHash,
-  splitAccounts,
-  split,
-  mainnetProvider,
-  projectWalletService,
-}) {
-  useEffect(() => {
-    setSplitObjects(prepareSplitObjects(splitAccounts, split));
-  }, [split, splitAccounts]);
-
+export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvider, projectWalletService }) {
   const [splitObjects, setSplitObjects] = useState(prepareSplitObjects(splitAccounts, split));
+  const [editInProgress, setEditInProgress] = useState(false);
+
+  useEffect(() => {
+    console.log("Use effect");
+    console.log("editInProgress" + editInProgress);
+    setSplitObjects(prepareSplitObjects(splitAccounts, split));
+  }, []);
+
+  // console.log("[editsplit] split :>> ", split);
+  // console.log("[editsplit] splitAccounts :>> ", splitAccounts);
 
   const handleFocus = e => e.target.select();
 
@@ -27,7 +25,7 @@ export default function EditSplit({
     return value.replace("%", "") * 100;
   };
 
-  const signSplitHandler = (splitObjects, lastHash, tx, writeContracts) => {
+  const signSplitHandler = (splitObjects, lastHash, signFunction, projectWalletService) => {
     var splitAccountsArray = [];
     var splitsArray = [];
     splitObjects.forEach(x => {
@@ -63,6 +61,7 @@ export default function EditSplit({
               placeholder={`Split account #${idx + 1}`}
               value={splitObjects.length > idx && splitObjects[idx].account}
               onChange={e => {
+                setEditInProgress(true);
                 setSplitObjects(
                   splitObjects.map((x, jdx) => {
                     return idx === jdx ? { ...x, account: e } : x;
@@ -84,6 +83,7 @@ export default function EditSplit({
               parser={splitPercentParser}
               onFocus={handleFocus}
               onChange={value => {
+                setEditInProgress(true);
                 setSplitObjects(
                   splitObjects.map((x, jdx) => {
                     return idx === jdx ? { ...x, split: value } : x;
@@ -103,6 +103,7 @@ export default function EditSplit({
         ))}
         <Button
           onClick={() => {
+            setEditInProgress(true);
             setSplitObjects(splitObjects.concat({ account: "", split: "" }));
           }}
         >
@@ -120,7 +121,7 @@ export default function EditSplit({
         >
           Validate
         </Button>
-        <Button onClick={() => signSplitHandler(splitObjects, lastHash, tx, writeContracts)}>Sign Split</Button>
+        <Button onClick={() => signSplitHandler(splitObjects, lastHash, projectWalletService)}>Sign Split</Button>
       </div>
       <div className="viewSplitChart" style={{ flex: "1 0 200px" }}>
         {splitObjects && <PieChart data={formatPieChartData(splitObjects)} />}

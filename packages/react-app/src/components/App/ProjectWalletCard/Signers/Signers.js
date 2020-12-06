@@ -10,6 +10,14 @@ const Signers = ({ readContracts, mainnetProvider, projectWalletService }) => {
   const signatureList = filterEmpty(useContractReader(readContracts, "DistributingTreaty", "getSignatureList"));
   return (
     <div>
+      <h3>Collaborators</h3>
+      <div style={{ margin: "4px", display: "flex", flexDirection: "row", justifyContent: "center" }}>
+        {signatureList &&
+          signatureList.map((x, i) => (
+            <Address key={`signer${i}`} value={x} ensProvider={mainnetProvider} fontSize={16} />
+          ))}
+      </div>
+      <Divider />
       <h3>State: {treatyState}</h3>
       <Divider />
       <Button
@@ -26,15 +34,6 @@ const Signers = ({ readContracts, mainnetProvider, projectWalletService }) => {
       >
         Make Active
       </Button>
-
-      <Divider />
-      <h3>Collaborators</h3>
-      <div style={{ margin: "4px", display: "flex", flexDirection: "row", justifyContent: "center" }}>
-        {signatureList &&
-          signatureList.map((x, i) => (
-            <Address key={`signer${i}`} value={x} ensProvider={mainnetProvider} fontSize={16} />
-          ))}
-      </div>
     </div>
   );
 };

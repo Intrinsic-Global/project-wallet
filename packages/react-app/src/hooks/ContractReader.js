@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import usePoller from "./Poller";
+import config from "../config";
 
 const DEBUG = false;
 
 export default function useContractReader(contracts, contractName, functionName, args, pollTime, formatter, onChange) {
-  let adjustPollTime = 1777;
+  let adjustPollTime = config.REACT_APP_POLL;
+  // let adjustPollTime = 1777;
   if (pollTime) {
     adjustPollTime = pollTime;
   } else if (!pollTime && typeof args === "number") {
@@ -19,30 +21,43 @@ export default function useContractReader(contracts, contractName, functionName,
     }
   }, [value]);
 
-  usePoller(async () => {
-    if (contracts && contracts[contractName]) {
-      try {
-        let newValue;
-        if (DEBUG) console.log("CALLING ", contractName, functionName, "with args", args);
-        if (args && args.length > 0) {
-          newValue = await contracts[contractName][functionName](...args);
-          if (DEBUG)
-            console.log("contractName", contractName, "functionName", functionName, "args", args, "RESULT:", newValue);
-        } else {
-          newValue = await contracts[contractName][functionName]();
+  usePoller(
+    async () => {
+      if (contracts && contracts[contractName]) {
+        try {
+          let newValue;
+          if (DEBUG) console.log("CALLING ", contractName, functionName, "with args", args);
+          if (args && args.length > 0) {
+            newValue = await contracts[contractName][functionName](...args);
+            if (DEBUG)
+              console.log(
+                "contractName",
+                contractName,
+                "functionName",
+                functionName,
+                "args",
+                args,
+                "RESULT:",
+                newValue,
+              );
+          } else {
+            newValue = await contracts[contractName][functionName]();
+          }
+          if (formatter && typeof formatter === "function") {
+            newValue = formatter(newValue);
+          }
+          // console.log("GOT VALUE",newValue)
+          if (newValue !== value) {
+            setValue(newValue);
+          }
+        } catch (e) {
+          console.log(e);
         }
-        if (formatter && typeof formatter === "function") {
-          newValue = formatter(newValue);
-        }
-        // console.log("GOT VALUE",newValue)
-        if (newValue !== value) {
-          setValue(newValue);
-        }
-      } catch (e) {
-        console.log(e);
       }
-    }
-  }, adjustPollTime, contracts);
+    },
+    adjustPollTime,
+    contracts,
+  );
 
   return value;
 }
