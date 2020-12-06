@@ -2,24 +2,43 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card } from "antd";
 import { Address } from "../..";
-import { useContractReader, useContractExistsAtAddress, useCustomContractLoader } from "../../../hooks";
+import {
+  useContractReader,
+  useContractExistsAtAddress,
+  useCustomContractLoader,
+  useCustomContractReader,
+} from "../../../hooks";
 import { DepositsWithdrawals } from "./DepositsWithdrawals";
 import { SplitContainer } from "./Split/SplitContainer";
 import { EventsPane } from "./EventsPane";
 import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
+import { useEffect } from "react";
 
-export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, readContracts, writeContracts }) {
+export default function ProjectWalletCard({
+  mainnetProvider,
+  localProvider,
+  userProvider,
+  tx,
+  readContracts,
+  writeContracts,
+}) {
+  // const [name, setName] = useState();
   const { projectWalletAddress } = useParams();
   console.log("projectWalletAddress :>> ", projectWalletAddress);
   const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
   console.log("[projectwalletcard] contractExists :>> ", contractExists);
-  const projectWalletContract = useCustomContractLoader(localProvider, "DistributingTreaty", projectWalletAddress);
+  const projectWalletContractReadOnly = useCustomContractLoader(
+    localProvider,
+    "DistributingTreaty",
+    projectWalletAddress,
+  );
+  const projectWalletContract = useCustomContractLoader(userProvider, "DistributingTreaty", projectWalletAddress);
   console.log("[projectwalletcard] projectWalletContract :>> ", projectWalletContract);
-  const name = useContractReader(projectWalletContract, "DistributingTreaty", "name");
-  console.log("[projectwalletcard] name :>> ", name);
+  console.log("[projectwalletcard] projectWalletContractReadOnly :>> ", projectWalletContractReadOnly);
+
+  const name = useCustomContractReader(projectWalletContract, "name");
   const [selectedTab, setSelectedTab] = useState("signers");
-  // const name = useContractReader(readContracts, "DistributingTreaty", "name");
   console.log("mainnetProvider :>> ", mainnetProvider);
 
   const onTabChange = key => {
@@ -58,7 +77,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
     return (
       <div style={boxStyle}>
         <Signers
-          readContracts={readContracts}
+          contract={projectWalletContract}
           writeContracts={writeContracts}
           tx={tx}
           mainnetProvider={mainnetProvider}
@@ -68,13 +87,25 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
   };
 
   const AgreementContentTab = () => {
-    return <AgreementContent readContracts={readContracts} writeContracts={writeContracts} tx={tx} />;
+    return (
+      <AgreementContent
+        contract={projectWalletContract}
+        writeContracts={writeContracts}
+        tx={tx}
+        contract={projectWalletContract}
+      />
+    );
   };
 
   const DepositWithdrawalsTab = () => {
     return (
       <div style={boxStyle}>
-        <DepositsWithdrawals readContracts={readContracts} writeContracts={writeContracts} tx={tx} />
+        <DepositsWithdrawals
+          contract={projectWalletContract}
+          writeContracts={writeContracts}
+          tx={tx}
+          localProvider={localProvider}
+        />
       </div>
     );
   };
@@ -82,7 +113,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, tx, 
   const DistributionTab = () => {
     return (
       // <div style={boxStyle}>
-      <SplitContainer readContracts={readContracts} writeContracts={writeContracts} tx={tx} />
+      <SplitContainer contract={projectWalletContract} writeContracts={writeContracts} tx={tx} />
       // </div>
     );
   };

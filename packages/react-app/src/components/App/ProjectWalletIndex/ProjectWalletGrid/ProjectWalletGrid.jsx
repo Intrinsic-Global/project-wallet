@@ -12,7 +12,9 @@ const Grid = styled.div`
   grid-gap: 20px;
 `;
 
-const GridElement = styled.div``;
+const GridElement = styled.div`
+  cursor: pointer;
+`;
 
 export default function ProjectWalletGrid({ readContracts }) {
   const projectWalletAddresses = useContractReader(readContracts, "TreatyIndex", "getTreatyIndex");
@@ -31,7 +33,7 @@ export default function ProjectWalletGrid({ readContracts }) {
     <Grid>
       {projectWalletDetails &&
         projectWalletDetails.map(x => (
-          <GridElement>
+          <GridElement key={x.addr}>
             <Card title={x.name} onClick={() => history.push(`/projectwallet/${x.addr}`)}>
               <Address value={x.addr} />
             </Card>

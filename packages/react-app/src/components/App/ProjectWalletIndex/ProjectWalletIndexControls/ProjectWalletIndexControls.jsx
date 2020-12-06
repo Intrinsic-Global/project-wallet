@@ -8,7 +8,7 @@ const AddButton = styled(Button)`
   margin-top: 10px;
 `;
 
-const ControlsForm = styled(Form)`
+const ControlsForm = styled.div`
   .register-form {
     line-height: 1.4;
   }

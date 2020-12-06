@@ -146,8 +146,9 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
           </Route>
-          <Route path="/projectwallet">
+          <Route path="/projectwallet/:projectWalletAddress">
             <ProjectWalletCard
+              name="DistributingTreaty"
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
@@ -159,9 +160,8 @@ function App(props) {
               readContracts={readContracts}
             />
           </Route>
-          <Route path="/projectwallet/:projectWalletAddress">
+          <Route path="/projectwallet">
             <ProjectWalletCard
-              name="DistributingTreaty"
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}

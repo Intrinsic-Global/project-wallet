@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Button, Input } from "antd";
-import { useBalance, useContractReader } from "../../../../hooks";
+import { useBalance, useCustomContractReader } from "../../../../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
 
-const DepositsWithdrawals = ({ readContracts, writeContracts, tx, projectWalletAddress, localProvider }) => {
+const DepositsWithdrawals = ({ contract, writeContracts, tx, localProvider }) => {
   const [sendValue, setSendValue] = useState("0.01");
   const [withdrawValue, setWithdrawValue] = useState("0");
-  const projectWalletBalance = useBalance(localProvider, projectWalletAddress);
-  const allocatedEth = useContractReader(readContracts, "DistributingTreaty", "checkBalance");
+  const projectWalletBalance = useBalance(localProvider, contract.address);
+  const allocatedEth = useCustomContractReader(contract, "checkBalance");
 
   return (
     <div>

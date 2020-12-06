@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Divider } from "antd";
 import { Address } from "../../..";
-import { useContractReader } from "../../../../hooks";
+import { useCustomContractReader } from "../../../../hooks";
 import { humanReadableTreatyStatus } from "../../../../mappings/enumMappings";
 import { filterEmpty } from "../../../../utilities/listUtils";
 
-const Signers = ({ readContracts, writeContracts, tx, mainnetProvider }) => {
-  const treatyState = humanReadableTreatyStatus(useContractReader(readContracts, "DistributingTreaty", "treatyState"));
-  const signatureList = filterEmpty(useContractReader(readContracts, "DistributingTreaty", "getSignatureList"));
+const Signers = ({ contract, writeContracts, tx, mainnetProvider }) => {
+  const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
+  const signatureList = filterEmpty(useCustomContractReader(contract, "getSignatureList"));
 
   return (
     <div>
