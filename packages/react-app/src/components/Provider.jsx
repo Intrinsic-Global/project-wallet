@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Badge } from "antd";
 import { usePoller, useBlockNumber } from "eth-hooks";
+import config from "../config";
 // import { WalletOutlined } from '@ant-design/icons';
 
 import Address from "./Address";
@@ -36,7 +37,7 @@ export default function Provider(props) {
         // eslint-disable-next-line no-empty
       } catch (e) {}
     }
-  }, 1377);
+  }, config.REACT_APP_POLL /*1377*/);
 
   if (
     typeof props.provider === "undefined" ||

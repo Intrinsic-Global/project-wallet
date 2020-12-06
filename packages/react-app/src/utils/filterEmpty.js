@@ -1,4 +1,4 @@
-export const filterEmpty = xs => {
+const filterEmpty = xs => {
   if (xs == undefined) return [];
   if (xs.filter == undefined) {
     return [];
@@ -10,3 +10,5 @@ export const filterEmpty = xs => {
       x.toString() != "",
   );
 };
+
+export default filterEmpty;

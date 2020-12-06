@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import { useContractReader, useCustomContractReader } from "../../../../hooks";
-import { ethers } from "ethers";
-import { filterEmpty } from "../../../../utilities/listUtils";
+import { useContractReader } from "../../../../hooks";
+import { filterEmpty } from "../../../../utils";
 
 const AgreementContentTable = ({ contentList }) => {
   const columns = [
@@ -41,7 +41,7 @@ const AgreementContentTable = ({ contentList }) => {
   );
 };
 
-const AgreementContent = ({ writeContracts, tx, contract }) => {
+const AgreementContent = ({ contract, projectWalletService }) => {
   const [addText, setAddText] = useState("");
   const [hashInput, setHashInput] = useState("");
 
@@ -67,19 +67,18 @@ const AgreementContent = ({ writeContracts, tx, contract }) => {
           value={addText}
           onChange={e => {
             setAddText(e.target.value);
-            setHashInput(ethers.utils.id(addText));
+            setHashInput(projectWalletService.calculateHash(addText));
           }}
         />
         <Button
           onClick={() => {
-            tx(writeContracts.DistributingTreaty.writeToTreaty(addText));
+            projectWalletService.writeAgreementText(addText);
           }}
         >
           Write Text To Chain
         </Button>
-        <Button onClick={() => tx(writeContracts.DistributingTreaty.signTreaty())}>Sign</Button>
+        <Button onClick={() => projectWalletService.sign()}>Sign</Button>
       </div>
-
       <div style={{ margin: 8, display: "flex", flexDirection: "row" }}>
         <Input
           value={hashInput}
@@ -89,7 +88,7 @@ const AgreementContent = ({ writeContracts, tx, contract }) => {
         />
         <Button
           onClick={() => {
-            tx(writeContracts.DistributingTreaty.signHash(hashInput));
+            projectWalletService.signHash(hashInput);
           }}
         >
           Write Hash to Chain and Sign

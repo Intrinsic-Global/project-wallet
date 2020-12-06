@@ -23,7 +23,11 @@ import { parseEther, formatEther } from "@ethersproject/units";
 import { ProjectWalletCard } from "./components/App/ProjectWalletCard";
 import { ProjectWalletIndex } from "./components/App/ProjectWalletIndex";
 
-import { INFURA_ID, ETHERSCAN_KEY } from "./constants";
+// import { REACT_APP_INFURA_ID, REACT_APP_ETHERSCAN_KEY } from "./constants";
+import config from "./config";
+
+console.log("config :>> ", config);
+
 const { TabPane } = Tabs;
 
 const DEBUG = true;
@@ -31,7 +35,7 @@ const DEBUG = true;
 const blockExplorer = "https://etherscan.io/"; // for xdai: "https://blockscout.com/poa/xdai/"
 
 if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
-const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID);
+const mainnetProvider = new JsonRpcProvider("https://mainnet.infura.io/v3/" + config.REACT_APP_INFURA_ID);
 
 const localProviderUrl = "http://localhost:8545"; // for xdai: https://dai.poa.network
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
@@ -42,7 +46,7 @@ const localProvider = new JsonRpcProvider(localProviderUrlFromEnv);
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
   /* 💵 this hook will get the price of ETH from 🦄 Uniswap: */
-  const price = useExchangePrice(mainnetProvider); //1 for xdai
+  const price = useExchangePrice(mainnetProvider, config.REACT_APP_POLL); //1 for xdai
 
   /* 🔥 this hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice("fast"); //1000000000 for xdai
@@ -57,11 +61,11 @@ function App(props) {
   const tx = Transactor(userProvider, gasPrice);
 
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
-  const yourLocalBalance = useBalance(localProvider, address);
+  const yourLocalBalance = useBalance(localProvider, address, config.REACT_APP_POLL);
   if (DEBUG) console.log("💵 yourLocalBalance", yourLocalBalance ? formatEther(yourLocalBalance) : "...");
 
   // just plug in different 🛰 providers to get your balance on different chains:
-  const yourMainnetBalance = useBalance(mainnetProvider, address);
+  const yourMainnetBalance = useBalance(mainnetProvider, address, config.REACT_APP_POLL);
   if (DEBUG) console.log("💵 yourMainnetBalance", yourMainnetBalance ? formatEther(yourMainnetBalance) : "...");
 
   // Load in your local 📝 contract and read a value from it:
@@ -92,7 +96,7 @@ function App(props) {
     <div className="App">
       <Header />
       <BrowserRouter>
-        <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
+        {/* <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/projectwalletcontract">
             <Link
               onClick={() => {
@@ -123,7 +127,7 @@ function App(props) {
               Project Wallet UI
             </Link>
           </Menu.Item>
-        </Menu>
+        </Menu> */}
         <Switch>
           <Route exact path="/">
             <Redirect to="/projectwalletindex" />
@@ -262,7 +266,7 @@ const web3Modal = new Web3Modal({
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
-        infuraId: INFURA_ID,
+        infuraId: config.REACT_APP_INFURA_ID,
       },
     },
   },

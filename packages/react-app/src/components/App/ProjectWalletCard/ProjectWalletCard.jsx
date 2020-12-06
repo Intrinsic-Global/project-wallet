@@ -13,7 +13,7 @@ import { SplitContainer } from "./Split/SplitContainer";
 import { EventsPane } from "./EventsPane";
 import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
-import { useEffect } from "react";
+import { ProjectWalletService } from "../../../utils";
 
 export default function ProjectWalletCard({
   mainnetProvider,
@@ -23,7 +23,6 @@ export default function ProjectWalletCard({
   readContracts,
   writeContracts,
 }) {
-  // const [name, setName] = useState();
   const { projectWalletAddress } = useParams();
   console.log("projectWalletAddress :>> ", projectWalletAddress);
   const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
@@ -40,6 +39,7 @@ export default function ProjectWalletCard({
   const name = useCustomContractReader(projectWalletContract, "name");
   const [selectedTab, setSelectedTab] = useState("signers");
   console.log("mainnetProvider :>> ", mainnetProvider);
+  const projectWalletService = new ProjectWalletService(writeContracts, tx);
 
   const onTabChange = key => {
     setSelectedTab(key);
@@ -78,8 +78,7 @@ export default function ProjectWalletCard({
       <div style={boxStyle}>
         <Signers
           contract={projectWalletContract}
-          writeContracts={writeContracts}
-          tx={tx}
+          projectWalletService={projectWalletService}
           mainnetProvider={mainnetProvider}
         />
       </div>
@@ -87,14 +86,7 @@ export default function ProjectWalletCard({
   };
 
   const AgreementContentTab = () => {
-    return (
-      <AgreementContent
-        contract={projectWalletContract}
-        writeContracts={writeContracts}
-        tx={tx}
-        contract={projectWalletContract}
-      />
-    );
+    return <AgreementContent contract={projectWalletContract} projectWalletService={projectWalletService} />;
   };
 
   const DepositWithdrawalsTab = () => {
@@ -102,9 +94,8 @@ export default function ProjectWalletCard({
       <div style={boxStyle}>
         <DepositsWithdrawals
           contract={projectWalletContract}
-          writeContracts={writeContracts}
-          tx={tx}
           localProvider={localProvider}
+          projectWalletService={projectWalletService}
         />
       </div>
     );
@@ -113,7 +104,7 @@ export default function ProjectWalletCard({
   const DistributionTab = () => {
     return (
       // <div style={boxStyle}>
-      <SplitContainer contract={projectWalletContract} writeContracts={writeContracts} tx={tx} />
+      <SplitContainer contract={projectWalletContract} projectWalletService={projectWalletService} />
       // </div>
     );
   };
