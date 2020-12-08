@@ -48,8 +48,8 @@ const AgreementContent = ({ contract, projectWalletService }) => {
   const unsignedTextList = useCustomContractReader(contract, "getUnsignedTextList");
   const signedTextList = useCustomContractReader(contract, "getSignedTextList");
 
-  const unsignedContent = unsignedTextList.concat(unsignedHashList);
-  const signedContent = signedTextList.concat(signedHashList);
+  const unsignedContent = [].concat(unsignedTextList).concat(unsignedHashList);
+  const signedContent = [].concat(signedTextList).concat(signedHashList);
   return (
     <div>
       <div>
