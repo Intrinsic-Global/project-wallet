@@ -16,10 +16,7 @@ contract DistributingTreaty is Treaty, DistributeEmbedded {
   ) 
     Treaty(_id, _name, _initialText)
     DistributeEmbedded() {
-        proposedSplitAccounts.push(msg.sender);
-        proposedSplitAccounts.push(address(this));
-        proposedSplit.push(uint(2000));
-        proposedSplit.push(uint(8000));
+        
   }
 
   function registerAsSigner() public inState(States.Draft) stateChange() override {

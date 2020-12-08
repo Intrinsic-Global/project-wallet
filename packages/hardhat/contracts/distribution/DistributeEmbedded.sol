@@ -56,9 +56,6 @@ contract DistributeEmbedded {
         uint[] memory initialSplits = new uint[](2);
         initialAddresses[0] = msg.sender;
         initialAddresses[1] = address(this);
-        initialSplits[0] = uint(5000);
-        initialSplits[1] = uint(5000);
-        setSplit(initialAddresses, initialSplits);
     }
 
     /// Add a new account for distribution of incoming funds
