@@ -4,6 +4,7 @@ import usePoller from "./Poller";
 const DEBUG = false;
 
 export default function useCustomContractReader(contract, functionName, args, pollTime, formatter, onChange) {
+  console.log("Called custom contract reader with ", contract, functionName);
   let adjustPollTime = 1777;
   if (pollTime) {
     adjustPollTime = pollTime;
@@ -29,6 +30,7 @@ export default function useCustomContractReader(contract, functionName, args, po
           if (DEBUG) console.log("contract", contract, "functionName", functionName, "args", args, "RESULT:", newValue);
         } else {
           newValue = await contract[functionName]();
+          console.log(`${contract}[${functionName}] :>> `, newValue);
         }
         if (formatter && typeof formatter === "function") {
           newValue = formatter(newValue);

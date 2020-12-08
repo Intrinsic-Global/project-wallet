@@ -1,11 +1,9 @@
-
 import React, { useState, useContext } from "react";
 import { Button, Input, Form } from "antd";
 import { useBalance, useCustomContractReader } from "../../../../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
 import styled from "styled-components";
 import { ProjectWalletService } from "../../../../utils";
-
 
 const SubmitButton = styled(Button)`
   margin-bottom: 2px;
@@ -73,7 +71,6 @@ const SectionedFormItem = styled.li`
 const DepositsWithdrawals = ({ contract, localProvider, projectWalletService }) => {
   const [sendValue, setSendValue] = useState("");
   const [withdrawValue, setWithdrawValue] = useState("");
-  const projectWalletAddress = readContracts && readContracts.DistributingTreaty.address;
   const projectWalletBalance = useBalance(localProvider, contract.address);
   const allocatedEth = useCustomContractReader(contract, "checkBalance");
   return (

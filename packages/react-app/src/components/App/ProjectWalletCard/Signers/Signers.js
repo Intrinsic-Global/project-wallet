@@ -6,7 +6,9 @@ import { humanReadableTreatyStatus } from "../../../../mappings/enumMappings";
 import { filterEmpty } from "../../../../utils";
 
 const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
+  console.log("[Signers] contract :>> ", contract);
   const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
+  console.log("[Signers] treatyState :>> ", treatyState);
   const signatureList = filterEmpty(useCustomContractReader(contract, "getSignatureList"));
   return (
     <div>
@@ -16,6 +18,7 @@ const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
           signatureList.map((x, i) => (
             <Address key={`signer${i}`} value={x} ensProvider={mainnetProvider} fontSize={16} />
           ))}
+        {/* {(signatureList === undefined || signatureList.length == 0) && <div>None</div>} */}
       </div>
       <Divider />
       <h3>State: {treatyState}</h3>

@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Card } from "antd";
 import { Address } from "../..";
-import {
-  useContractReader,
-  useContractExistsAtAddress,
-  useCustomContractLoader,
-  useCustomContractReader,
-} from "../../../hooks";
+import { useContractExistsAtAddress, useCustomContractLoader, useCustomContractReader } from "../../../hooks";
 import { DepositsWithdrawals } from "./DepositsWithdrawals";
 import { SplitContainer } from "./Split/SplitContainer";
 import { EventsPane } from "./EventsPane";
@@ -15,14 +10,8 @@ import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
 import { ProjectWalletService } from "../../../utils";
 
-export default function ProjectWalletCard({
-  mainnetProvider,
-  localProvider,
-  userProvider,
-  tx,
-  readContracts,
-  writeContracts,
-}) {
+export default function ProjectWalletCard({ mainnetProvider, localProvider, userProvider, tx, readContracts }) {
+  const [selectedTab, setSelectedTab] = useState("signers");
   const { projectWalletAddress } = useParams();
   console.log("projectWalletAddress :>> ", projectWalletAddress);
   const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
@@ -33,13 +22,8 @@ export default function ProjectWalletCard({
     projectWalletAddress,
   );
   const projectWalletContract = useCustomContractLoader(userProvider, "DistributingTreaty", projectWalletAddress);
-  console.log("[projectwalletcard] projectWalletContract :>> ", projectWalletContract);
-  console.log("[projectwalletcard] projectWalletContractReadOnly :>> ", projectWalletContractReadOnly);
-
   const name = useCustomContractReader(projectWalletContract, "name");
-  const [selectedTab, setSelectedTab] = useState("signers");
-  console.log("mainnetProvider :>> ", mainnetProvider);
-  const projectWalletService = new ProjectWalletService(writeContracts, tx);
+  const projectWalletService = new ProjectWalletService(projectWalletContract, tx);
 
   const onTabChange = key => {
     setSelectedTab(key);

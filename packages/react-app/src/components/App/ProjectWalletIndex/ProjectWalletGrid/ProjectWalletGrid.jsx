@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { Address } from "../../..";
 import { useContractReader } from "../../../../hooks";
 import styled from "styled-components";
@@ -17,7 +17,7 @@ const GridElement = styled.div`
 `;
 
 export default function ProjectWalletGrid({ readContracts }) {
-  const projectWalletAddresses = useContractReader(readContracts, "TreatyIndex", "getTreatyIndex");
+  // const projectWalletAddresses = useContractReader(readContracts, "TreatyIndex", "getTreatyIndex");
   const projectWalletDetails = useContractReader(readContracts, "TreatyIndex", "getDistributingTreatyDetails");
   const history = useHistory();
   console.log("projectWalletDetails :>> ", projectWalletDetails);

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
-import { useContractReader, useCustomContractReader } from "../../../../hooks";
-import { useContractReader } from "../../../../hooks";
+import { useCustomContractReader } from "../../../../hooks";
 import { filterEmpty } from "../../../../utils";
 
 const AgreementContentTable = ({ contentList }) => {

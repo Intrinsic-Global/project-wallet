@@ -2,28 +2,28 @@ import { parseEther, formatEther } from "@ethersproject/units";
 import { ethers } from "ethers";
 
 export default class ProjectWalletService {
-  constructor(writeContracts, tx) {
+  constructor(projectWalletContract, tx) {
+    this.projectWalletContract = projectWalletContract;
     this.tx = tx;
-    this.writeContracts = writeContracts;
   }
 
   withdrawMax() {
-    return this.tx(this.writeContracts.DistributingTreaty.withdrawMax());
+    return this.tx(this.projectWalletContract["withdrawMax"]());
   }
 
   withdraw(amount) {
-    return this.tx(this.writeContracts.DistributingTreaty.withdraw(amount));
+    return this.tx(this.projectWalletContract["withdraw"](amount));
   }
 
   deposit(amount) {
     return this.tx({
-      to: this.writeContracts.DistributingTreaty.address,
+      to: this.projectWalletContract.address,
       value: parseEther(amount),
     });
   }
 
   writeAgreementText(text) {
-    return this.tx(this.writeContracts.DistributingTreaty.writeToTreaty(text));
+    return this.tx(this.projectWalletContract["writeToTreaty"](text));
   }
 
   calculateHash(text) {
@@ -31,22 +31,29 @@ export default class ProjectWalletService {
   }
 
   sign() {
-    this.tx(this.writeContracts.DistributingTreaty.signTreaty());
+    this.tx(this.projectWalletContract["signTreaty"]());
   }
 
   signHash(hash) {
-    this.tx(this.writeContracts.DistributingTreaty.signHash(hash));
+    this.tx(this.projectWalletContract["signHash"](hash));
   }
 
   registerAsSigner() {
-    this.tx(this.writeContracts.DistributingTreaty.registerAsSigner());
+    console.log(
+      "[ProjectWalletService] Register as Signer:>> ",
+      this.tx,
+      this.writeContracts,
+      this.projectWalletContract,
+    );
+    return this.tx(this.projectWalletContract["registerAsSigner"]());
   }
 
   makeActive() {
-    this.tx(this.writeContracts.DistributingTreaty.makeActive());
+    console.log("[ProjectWalletService] Make active:>> ", this.tx, this.writeContracts);
+    return this.tx(this.projectWalletContract["makeActive"]());
   }
 
   signHashWithSplit(lastHash, splitAccounts, split) {
-    this.tx(this.writeContracts.DistributingTreaty.signHashWithSplit(lastHash, splitAccounts, split));
+    return this.tx(this.projectWalletContract["signHashWithSplit"](lastHash, splitAccounts, split));
   }
 }

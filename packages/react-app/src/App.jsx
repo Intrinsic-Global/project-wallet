@@ -96,8 +96,8 @@ function App(props) {
     <div className="App">
       <Header />
       <BrowserRouter>
-        {/* <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
-          <Menu.Item key="/projectwalletcontract">
+        <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
+          {/* <Menu.Item key="/projectwalletcontract">
             <Link
               onClick={() => {
                 setRoute("/projectwalletcontract");
@@ -106,7 +106,7 @@ function App(props) {
             >
               Project Wallet Contract
             </Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="/projectwalletindex">
             <Link
               onClick={() => {
@@ -117,7 +117,7 @@ function App(props) {
               Project Wallet Index
             </Link>
           </Menu.Item>
-          <Menu.Item key="/projectwallet">
+          {/* <Menu.Item key="/projectwallet">
             <Link
               onClick={() => {
                 setRoute("/projectwallet");
@@ -126,8 +126,8 @@ function App(props) {
             >
               Project Wallet UI
             </Link>
-          </Menu.Item>
-        </Menu> */}
+          </Menu.Item> */}
+        </Menu>
         <Switch>
           <Route exact path="/">
             <Redirect to="/projectwalletindex" />
