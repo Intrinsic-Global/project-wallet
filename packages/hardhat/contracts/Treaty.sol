@@ -284,12 +284,8 @@ contract Treaty is TreatyStateMachine, Lockable {
     return signedHash[signedHash.length - 1];
   }
 
-  function getSignatureList() public view returns (address[10] memory) {
-    address[10] memory mSignatureList;
-    for(uint i=0; i<signatureList.length;i++){
-        mSignatureList[i] = signatureList[i];
-    }      
-    return mSignatureList;
+  function getSignatureList() public view returns (address[] memory) {
+    return signatureList;
   }
 
   function getUnsignedHashList() public view returns (bytes32[] memory) {

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import { useCustomContractReader } from "../../../../hooks";
-import { filterEmpty } from "../../../../utils";
 
 const AgreementContentTable = ({ contentList }) => {
   const columns = [
@@ -44,10 +43,10 @@ const AgreementContent = ({ contract, projectWalletService }) => {
   const [addText, setAddText] = useState("");
   const [hashInput, setHashInput] = useState("");
 
-  const unsignedHashList = filterEmpty(useCustomContractReader(contract, "getUnsignedHashList"));
-  const signedHashList = filterEmpty(useCustomContractReader(contract, "getSignedHashList"));
-  const unsignedTextList = filterEmpty(useCustomContractReader(contract, "getUnsignedTextList"));
-  const signedTextList = filterEmpty(useCustomContractReader(contract, "getSignedTextList"));
+  const unsignedHashList = useCustomContractReader(contract, "getUnsignedHashList");
+  const signedHashList = useCustomContractReader(contract, "getSignedHashList");
+  const unsignedTextList = useCustomContractReader(contract, "getUnsignedTextList");
+  const signedTextList = useCustomContractReader(contract, "getSignedTextList");
 
   const unsignedContent = unsignedTextList.concat(unsignedHashList);
   const signedContent = signedTextList.concat(signedHashList);

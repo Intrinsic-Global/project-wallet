@@ -3,13 +3,12 @@ import { Button, Divider } from "antd";
 import { Address } from "../../..";
 import { useCustomContractReader } from "../../../../hooks";
 import { humanReadableTreatyStatus } from "../../../../mappings/enumMappings";
-import { filterEmpty } from "../../../../utils";
 
 const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
   console.log("[Signers] contract :>> ", contract);
   const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
   console.log("[Signers] treatyState :>> ", treatyState);
-  const signatureList = filterEmpty(useCustomContractReader(contract, "getSignatureList"));
+  const signatureList = useCustomContractReader(contract, "getSignatureList");
   return (
     <div>
       <h3>Collaborators</h3>
