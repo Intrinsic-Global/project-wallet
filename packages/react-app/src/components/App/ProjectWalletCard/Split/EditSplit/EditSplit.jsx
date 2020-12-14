@@ -22,7 +22,7 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
     return value.replace("%", "") * 100;
   };
 
-  const signSplitHandler = (splitObjects, lastHash, signFunction, projectWalletService) => {
+  const signSplitHandler = (splitObjects, lastHash) => {
     var splitAccountsArray = [];
     var splitsArray = [];
     splitObjects.forEach(x => {

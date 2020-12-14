@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import { useCustomContractReader } from "../../../../hooks";
+import mobiscroll from "@mobiscroll/react";
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 
 const AgreementContentTable = ({ contentList }) => {
   const columns = [
@@ -51,48 +53,72 @@ const AgreementContent = ({ contract, projectWalletService }) => {
   const unsignedContent = [].concat(unsignedTextList).concat(unsignedHashList);
   const signedContent = [].concat(signedTextList).concat(signedHashList);
   return (
-    <div>
-      <div>
-        <h3>Unsigned Content</h3>
+    <mobiscroll.Form>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>Unsigned Content</mobiscroll.FormGroupTitle>
+        {/* <mobiscroll.FormGroupContent> */}
         <AgreementContentTable contentList={unsignedContent} />
-      </div>
-      <div>
-        <h3>Signed Content</h3>
+        {/* </mobiscroll.FormGroupContent> */}
+      </mobiscroll.FormGroup>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>Signed Content</mobiscroll.FormGroupTitle>
+        {/* <mobiscroll.FormGroupContent> */}
         <AgreementContentTable contentList={signedContent} />
-      </div>
-      <div style={{ margin: 8, display: "flex", flexDirection: "row" }}>
-        <Input
+        {/* </mobiscroll.FormGroupContent> */}
+      </mobiscroll.FormGroup>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>Plain text interactions</mobiscroll.FormGroupTitle>
+        <mobiscroll.Input
           value={addText}
           onChange={e => {
             setAddText(e.target.value);
             setHashInput(projectWalletService.calculateHash(addText));
           }}
         />
-        <Button
+        <mobiscroll.Button
           onClick={() => {
             projectWalletService.writeAgreementText(addText);
           }}
         >
           Write Text To Chain
-        </Button>
-        <Button onClick={() => projectWalletService.sign()}>Sign</Button>
-      </div>
-      <div style={{ margin: 8, display: "flex", flexDirection: "row" }}>
-        <Input
+        </mobiscroll.Button>
+        <mobiscroll.Button onClick={() => projectWalletService.sign()}>Sign</mobiscroll.Button>
+      </mobiscroll.FormGroup>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>Hash Interactions</mobiscroll.FormGroupTitle>
+        <mobiscroll.Input
           value={hashInput}
           onChange={e => {
             setHashInput(e.target.value);
           }}
         />
-        <Button
+        <mobiscroll.Button
           onClick={() => {
             projectWalletService.signHash(hashInput);
           }}
         >
           Write Hash to Chain and Sign
-        </Button>
-      </div>
-    </div>
+        </mobiscroll.Button>{" "}
+      </mobiscroll.FormGroup>
+    </mobiscroll.Form>
+
+    //   </div>
+    //   <div style={{ margin: 8, display: "flex", flexDirection: "row" }}>
+    //     <mobiscroll.Input
+    //       value={hashInput}
+    //       onChange={e => {
+    //         setHashInput(e.target.value);
+    //       }}
+    //     />
+    //     <mobiscroll.Button
+    //       onClick={() => {
+    //         projectWalletService.signHash(hashInput);
+    //       }}
+    //     >
+    //       Write Hash to Chain and Sign
+    //     </mobiscroll.Button>
+    //   </div>
+    // </div>
   );
 };
 

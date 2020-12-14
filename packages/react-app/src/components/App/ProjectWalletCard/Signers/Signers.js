@@ -3,40 +3,38 @@ import { Button, Divider } from "antd";
 import { Address } from "../../..";
 import { useCustomContractReader } from "../../../../hooks";
 import { humanReadableTreatyStatus } from "../../../../mappings/enumMappings";
+import mobiscroll from "@mobiscroll/react";
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
+
+const DEBUG = false;
 
 const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
-  // console.log("[Signers] contract :>> ", contract);
+  if (DEBUG) console.log("[Signers] contract :>> ", contract);
   const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
-  // console.log("[Signers] treatyState :>> ", treatyState);
+  if (DEBUG) console.log("[Signers] treatyState :>> ", treatyState);
   const signatureList = useCustomContractReader(contract, "getSignatureList");
   return (
-    <div>
-      <h3>Collaborators</h3>
-      <div style={{ margin: "4px", display: "flex", flexDirection: "row", justifyContent: "center" }}>
+    <mobiscroll.Form>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>State</mobiscroll.FormGroupTitle>
+        <mobiscroll.Input value={treatyState}>State</mobiscroll.Input>
+        <mobiscroll.Button onClick={() => projectWalletService.registerAsSigner()}>
+          Register as Signer
+        </mobiscroll.Button>
+        <mobiscroll.Button onClick={() => projectWalletService.makeActive()}>Make Active</mobiscroll.Button>
+      </mobiscroll.FormGroup>
+      <mobiscroll.FormGroup>
+        <mobiscroll.FormGroupTitle>Collaborators</mobiscroll.FormGroupTitle>
+
         {signatureList &&
           signatureList.map((x, i) => (
-            <Address key={`signer${i}`} value={x} ensProvider={mainnetProvider} fontSize={16} />
+            <mobiscroll.FormGroupContent>
+              <Address key={`signer${i}`} value={x} ensProvider={mainnetProvider} fontSize={16} />
+            </mobiscroll.FormGroupContent>
           ))}
-        {/* {(signatureList === undefined || signatureList.length == 0) && <div>None</div>} */}
-      </div>
-      <Divider />
-      <h3>State: {treatyState}</h3>
-      <Divider />
-      <Button
-        onClick={() => {
-          projectWalletService.registerAsSigner();
-        }}
-      >
-        Register as Signer
-      </Button>
-      <Button
-        onClick={() => {
-          projectWalletService.makeActive();
-        }}
-      >
-        Make Active
-      </Button>
-    </div>
+        {(signatureList === undefined || signatureList.length == 0) && <div>None</div>}
+      </mobiscroll.FormGroup>
+    </mobiscroll.Form>
   );
 };
 
