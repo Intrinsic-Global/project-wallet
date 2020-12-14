@@ -13,9 +13,9 @@ import { ProjectWalletService } from "../../../utils";
 export default function ProjectWalletCard({ mainnetProvider, localProvider, userProvider, tx, readContracts }) {
   const [selectedTab, setSelectedTab] = useState("signers");
   const { projectWalletAddress } = useParams();
-  console.log("projectWalletAddress :>> ", projectWalletAddress);
+  // console.log("projectWalletAddress :>> ", projectWalletAddress);
   const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
-  console.log("[projectwalletcard] contractExists :>> ", contractExists);
+  // console.log("[projectwalletcard] contractExists :>> ", contractExists);
   const projectWalletContractReadOnly = useCustomContractLoader(
     localProvider,
     "DistributingTreaty",

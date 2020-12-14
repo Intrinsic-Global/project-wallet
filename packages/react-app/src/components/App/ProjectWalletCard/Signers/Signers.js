@@ -5,9 +5,9 @@ import { useCustomContractReader } from "../../../../hooks";
 import { humanReadableTreatyStatus } from "../../../../mappings/enumMappings";
 
 const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
-  console.log("[Signers] contract :>> ", contract);
+  // console.log("[Signers] contract :>> ", contract);
   const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
-  console.log("[Signers] treatyState :>> ", treatyState);
+  // console.log("[Signers] treatyState :>> ", treatyState);
   const signatureList = useCustomContractReader(contract, "getSignatureList");
   return (
     <div>

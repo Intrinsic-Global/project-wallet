@@ -16,9 +16,6 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
     setSplitObjects(prepareSplitObjects(splitAccounts, split));
   }, []);
 
-  // console.log("[editsplit] split :>> ", split);
-  // console.log("[editsplit] splitAccounts :>> ", splitAccounts);
-
   const handleFocus = e => e.target.select();
 
   const splitPercentParser = value => {
@@ -111,7 +108,7 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
         </Button>
         <Button
           onClick={() => {
-            console.log(splitObjects);
+            // console.log(splitObjects);
             if (validateSplitObjects(splitObjects)) {
               alert("Valid. \n" + JSON.stringify(splitObjects));
             } else {

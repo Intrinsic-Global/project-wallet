@@ -39,17 +39,17 @@ export default class ProjectWalletService {
   }
 
   registerAsSigner() {
-    console.log(
-      "[ProjectWalletService] Register as Signer:>> ",
-      this.tx,
-      this.writeContracts,
-      this.projectWalletContract,
-    );
+    // console.log(
+    //   "[ProjectWalletService] Register as Signer:>> ",
+    //   this.tx,
+    //   this.writeContracts,
+    //   this.projectWalletContract,
+    // );
     return this.tx(this.projectWalletContract["registerAsSigner"]());
   }
 
   makeActive() {
-    console.log("[ProjectWalletService] Make active:>> ", this.tx, this.writeContracts);
+    // console.log("[ProjectWalletService] Make active:>> ", this.tx, this.writeContracts);
     return this.tx(this.projectWalletContract["makeActive"]());
   }
 

@@ -18,9 +18,9 @@ const GridElement = styled.div`
 
 export default function ProjectWalletGrid({ readContracts }) {
   // const projectWalletAddresses = useContractReader(readContracts, "TreatyIndex", "getTreatyIndex");
-  const projectWalletDetails = useContractReader(readContracts, "TreatyIndex", "getDistributingTreatyDetails");
+  const projectWalletDetails = useContractReader(readContracts, "TreatyIndex", "getDistributingTreatyDetails", 1777);
   const history = useHistory();
-  console.log("projectWalletDetails :>> ", projectWalletDetails);
+  // console.log("projectWalletDetails :>> ", projectWalletDetails);
 
   // const projectWallets = projectWalletAddresses.map(x => {
   //   return {
