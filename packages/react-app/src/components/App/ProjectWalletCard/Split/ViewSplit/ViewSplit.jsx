@@ -23,7 +23,7 @@ export default function ViewSplit({ lastHash, splitAccounts, split, mainnetProvi
         ))}
       </div>
       <div className="viewSplitChart" style={{ flex: "1 0 200px" }}>
-        {splitObjects && <PieChart data={formatPieChartData(splitObjects)} />}
+        {splitObjects && <PieChart viewBoxSize={[250, 250]} data={formatPieChartData(splitObjects)} />}
       </div>
     </div>
   );

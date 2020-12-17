@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card } from "antd";
+import { Card, Button } from "antd";
 import { Address } from "../..";
 import { useContractExistsAtAddress, useCustomContractLoader, useCustomContractReader } from "../../../hooks";
 import { DepositsWithdrawals } from "./DepositsWithdrawals";
 import { SplitContainer } from "./Split/SplitContainer";
-import { EventsPane } from "./EventsPane";
+import { EventsPanev2 } from "./EventsPane";
 import { Signers } from "./Signers";
 import { AgreementContent } from "./AgreementContent";
 import { ProjectWalletService } from "../../../utils";
@@ -13,9 +13,7 @@ import { ProjectWalletService } from "../../../utils";
 export default function ProjectWalletCard({ mainnetProvider, localProvider, userProvider, tx, readContracts }) {
   const [selectedTab, setSelectedTab] = useState("signers");
   const { projectWalletAddress } = useParams();
-  // console.log("projectWalletAddress :>> ", projectWalletAddress);
-  const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
-  // console.log("[projectwalletcard] contractExists :>> ", contractExists);
+  // const contractExists = useContractExistsAtAddress(localProvider, projectWalletAddress);
   const projectWalletContractReadOnly = useCustomContractLoader(
     localProvider,
     "DistributingTreaty",
@@ -43,13 +41,12 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
       tab: "Distribution",
     },
     {
-      key: "depositWithdrawalsTab",
+      key: "depositWithdrawals",
       tab: "Deposits and Withdrawals",
     },
   ];
 
   const boxStyle = {
-    // border: "1px solid #cccccc",
     padding: 16,
     width: 400,
     margin: "auto",
@@ -57,47 +54,11 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
     overflow: "hidden",
   };
 
-  const SignersTab = () => {
-    return (
-      <div style={boxStyle}>
-        <Signers
-          contract={projectWalletContract}
-          projectWalletService={projectWalletService}
-          mainnetProvider={mainnetProvider}
-        />
-      </div>
-    );
-  };
-
-  const AgreementContentTab = () => {
-    return <AgreementContent contract={projectWalletContract} projectWalletService={projectWalletService} />;
-  };
-
-  const DepositWithdrawalsTab = () => {
-    return (
-      <div style={boxStyle}>
-        <DepositsWithdrawals
-          contract={projectWalletContract}
-          localProvider={localProvider}
-          projectWalletService={projectWalletService}
-        />
-      </div>
-    );
-  };
-
-  const DistributionTab = () => {
-    return (
-      // <div style={boxStyle}>
-      <SplitContainer contract={projectWalletContract} projectWalletService={projectWalletService} />
-      // </div>
-    );
-  };
-
   const tabContentList = {
-    signers: <SignersTab />,
-    content: <AgreementContentTab />,
-    split: <DistributionTab />,
-    depositWithdrawalsTab: <DepositWithdrawalsTab />,
+    signers: <Button />,
+    content: <Button />,
+    split: <Button />,
+    depositWithdrawalsTab: <Button />,
   };
 
   const htmlCardTitle = (
@@ -117,6 +78,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
     <div>
       <Card
         title={htmlCardTitle}
+        maxHeight="300px"
         extra={<a href="#">More</a>}
         tabList={tabList}
         activeTabKey={selectedTab}
@@ -124,10 +86,44 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
           return onTabChange(key, "key");
         }}
       >
-        {tabContentList[selectedTab]}
+        <div id="tab-set" max-height="300px">
+          {selectedTab == "split" && (
+            <div id="tab-splits">
+              <SplitContainer contract={projectWalletContract} projectWalletService={projectWalletService} />
+            </div>
+          )}
+          {selectedTab == "content" && (
+            <div id="tab-agreement-content">
+              <AgreementContent contract={projectWalletContract} projectWalletService={projectWalletService} />
+            </div>
+          )}
+          {selectedTab == "signers" && (
+            <div id="tab-signers">
+              <Signers
+                contract={projectWalletContract}
+                projectWalletService={projectWalletService}
+                mainnetProvider={mainnetProvider}
+              />
+            </div>
+          )}
+          {selectedTab == "depositWithdrawals" && (
+            <div id="tab-deposits-withdrawals">
+              <DepositsWithdrawals
+                contract={projectWalletContract}
+                localProvider={localProvider}
+                projectWalletService={projectWalletService}
+              />
+            </div>
+          )}
+        </div>
       </Card>
       <Card title="Events" extra={<a href="#">More</a>}>
-        <EventsPane readContracts={readContracts} localProvider={localProvider} mainnetProvider={mainnetProvider} />
+        <EventsPanev2
+          contract={projectWalletContract}
+          readContracts={readContracts}
+          localProvider={localProvider}
+          mainnetProvider={mainnetProvider}
+        />
       </Card>
     </div>
   );

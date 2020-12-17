@@ -10,7 +10,7 @@ const DEBUG = false;
 
 const Signers = ({ contract, mainnetProvider, projectWalletService }) => {
   if (DEBUG) console.log("[Signers] contract :>> ", contract);
-  const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState"));
+  const treatyState = humanReadableTreatyStatus(useCustomContractReader(contract, "treatyState", 1777));
   if (DEBUG) console.log("[Signers] treatyState :>> ", treatyState);
   const signatureList = useCustomContractReader(contract, "getSignatureList");
   return (

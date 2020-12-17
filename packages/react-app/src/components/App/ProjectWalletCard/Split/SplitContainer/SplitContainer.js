@@ -4,19 +4,22 @@ import { EditSplit } from "../EditSplit";
 import { ViewSplit } from "../ViewSplit";
 import mobiscroll from "@mobiscroll/react";
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
+import { prepareSplitObjects } from "../shared/SplitFunctions";
 
 mobiscroll.settings = {
   theme: "mobiscroll",
   themeVariant: "light",
 };
 
-const popupBtn = [
-  {
-    text: "Submit",
-    handler: "set",
-  },
-  "cancel",
-];
+// const popupBtn = [
+//   {
+//     text: "Submit",
+//     handler: "set",
+//   },
+//   "cancel",
+// ];
+
+const popupBtn = ["close"];
 
 const SplitContainer = ({ contract, projectWalletService, mainnetProvider }) => {
   const activeSplitAccounts = useCustomContractReader(contract, "getSplitAccounts");
@@ -42,37 +45,26 @@ const SplitContainer = ({ contract, projectWalletService, mainnetProvider }) => 
   };
 
   return (
-    <div>
-      <mobiscroll.Button onClick={showPopup}>Propose split or agree to proposed split</mobiscroll.Button>
-      <mobiscroll.Form>
-        <mobiscroll.FormGroup>
-          <mobiscroll.FormGroupTitle>Active Distribution</mobiscroll.FormGroupTitle>
-          {activeSplit !== undefined && activeSplitAccounts !== undefined && (
-            <ViewSplit splitAccounts={activeSplitAccounts} split={activeSplit} mainnetProvider={mainnetProvider} />
-          )}
-        </mobiscroll.FormGroup>
-      </mobiscroll.Form>
-
-      {/* <mobiscroll.Button onClick={() => showPopup()}>Show popover with form annon</mobiscroll.Button> */}
-
-      <mobiscroll.Popup ref={popup} display="center" cssClass="mbsc-no-padding" buttons={popupBtn}>
-        <mobiscroll.Form>
-          <mobiscroll.FormGroup inset>
-            <mobiscroll.FormGroupTitle>Proposed Distribution</mobiscroll.FormGroupTitle>
-            <mobiscroll.FormGroupContent>
-              {proposedSplit !== undefined && proposedSplitAccounts !== undefined && (
-                <EditSplit
-                  projectWalletService={projectWalletService}
-                  lastHash={lastHash}
-                  splitAccounts={proposedSplitAccounts}
-                  split={proposedSplit}
-                  mainnetProvider={mainnetProvider}
-                />
-              )}
-            </mobiscroll.FormGroupContent>
-          </mobiscroll.FormGroup>
-        </mobiscroll.Form>
-      </mobiscroll.Popup>
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ maxWidth: "50%", flex: 1 }}>
+        <h1>Active Distribution</h1>
+        {activeSplit !== undefined && activeSplitAccounts !== undefined && (
+          <ViewSplit splitAccounts={activeSplitAccounts} split={activeSplit} mainnetProvider={mainnetProvider} />
+        )}
+      </div>
+      <div style={{ maxWidth: "50%", flex: 1 }}>
+        <h1>Proposed Distribution</h1>
+        {proposedSplit !== undefined && proposedSplitAccounts !== undefined && (
+          <EditSplit
+            projectWalletService={projectWalletService}
+            lastHash={lastHash}
+            splitAccounts={proposedSplitAccounts}
+            split={proposedSplit}
+            splitObjects={prepareSplitObjects(proposedSplitAccounts, proposedSplit)}
+            mainnetProvider={mainnetProvider}
+          />
+        )}
+      </div>
     </div>
   );
 };
