@@ -1,20 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Button, InputNumber } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { AddressInput } from "../../../..";
 import { PieChart } from "react-minimal-pie-chart";
-import { prepareSplitObjects, formatPieChartData, splitPercentFormatter } from "../shared/SplitFunctions";
-import { useEffect } from "react";
+import { formatPieChartData, splitPercentFormatter, prepareSplitObjects } from "../shared/SplitFunctions";
 
-export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvider, projectWalletService }) {
+const editSplitReducer = (state, action) => {
+  switch (action.type) {
+    case "addSplitPlaceholder":
+      return {
+        ...state,
+        splits: state.splits.concat({ account: "", split: "" }),
+      };
+    case "removeSplit":
+      return {
+        ...state,
+        splits: state.filter((split, index) => index !== action.indexToRemove),
+      };
+    case "setSplit":
+      return {
+        ...state,
+        splits: state.splits.map((x, index) => {
+          return index == action.index ? { ADDRESS: action.percentage } : x;
+        }),
+      };
+    default:
+      throw new Error("No match for :>> ", action);
+  }
+};
+
+export default function EditSplit({ lastHash, mainnetProvider, projectWalletService, splitAccounts, split }) {
   const [splitObjects, setSplitObjects] = useState(prepareSplitObjects(splitAccounts, split));
-  const [editInProgress, setEditInProgress] = useState(false);
+  const initialState = { splits: [] };
+  const [editSplitState, editSplitDispatch] = useReducer(editSplitReducer, initialState);
 
-  useEffect(() => {
-    console.log("Use effect");
-    console.log("editInProgress" + editInProgress);
-    setSplitObjects(prepareSplitObjects(splitAccounts, split));
-  }, []);
+  console.log("editSplitState :>> ", editSplitState);
+  console.log("editSplitDispatch :>> ", editSplitDispatch);
 
   const handleFocus = e => e.target.select();
 
@@ -22,7 +43,7 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
     return value.replace("%", "") * 100;
   };
 
-  const signSplitHandler = (splitObjects, lastHash, signFunction, projectWalletService) => {
+  const signSplitHandler = (splitObjects, lastHash) => {
     var splitAccountsArray = [];
     var splitsArray = [];
     splitObjects.forEach(x => {
@@ -47,60 +68,58 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
   return (
     <div className="editSplits" style={{ display: "flex", flexDirection: "column" }}>
       <div className="editSplitText" style={{ flex: "1 0 100px" }}>
-        {splitObjects.map((x, idx) => (
-          <div key={`split${idx + 1}`} className="splitAccount" style={{ flexDirection: "row", display: "flex" }}>
-            <AddressInput
-              key={`splitAddressInput${idx}`}
-              id={`splitAddressInput${idx}`}
-              name={`splitAddressInput${idx}`}
-              ensProvider={mainnetProvider}
-              fontSize={16}
-              placeholder={`Split account #${idx + 1}`}
-              value={splitObjects.length > idx && splitObjects[idx].account}
-              onChange={e => {
-                setEditInProgress(true);
-                setSplitObjects(
-                  splitObjects.map((x, jdx) => {
-                    return idx === jdx ? { ...x, account: e } : x;
-                  }),
-                );
-              }}
-            />
-            <InputNumber
-              key={`splitInput${idx}`}
-              id={`splitInput${idx}`}
-              placeholder={`Split account #${idx} split`}
-              value={splitObjects.length > idx && splitObjects[idx].split}
-              defaultValue={0}
-              min={0}
-              max={10000}
-              precision={2}
-              step={100}
-              formatter={splitPercentFormatter}
-              parser={splitPercentParser}
-              onFocus={handleFocus}
-              onChange={value => {
-                setEditInProgress(true);
-                setSplitObjects(
-                  splitObjects.map((x, jdx) => {
-                    return idx === jdx ? { ...x, split: value } : x;
-                  }),
-                );
-              }}
-            />
-            <Button
-              style={{ background: "#d2515185", color: "white" }}
-              onClick={() => {
-                setSplitObjects(splitObjects.filter((x, kdx) => kdx !== idx));
-              }}
-            >
-              <CloseOutlined />
-            </Button>
-          </div>
-        ))}
+        {splitObjects.map &&
+          splitObjects.map((x, idx) => (
+            <div key={`split${idx + 1}`} className="splitAccount" style={{ flexDirection: "row", display: "flex" }}>
+              <AddressInput
+                key={`splitAddressInput${idx}`}
+                id={`splitAddressInput${idx}`}
+                name={`splitAddressInput${idx}`}
+                ensProvider={mainnetProvider}
+                fontSize={16}
+                placeholder={`Split account #${idx + 1}`}
+                value={splitObjects.length > idx && splitObjects[idx].account}
+                onChange={e => {
+                  setSplitObjects(
+                    splitObjects.map((x, jdx) => {
+                      return idx === jdx ? { ...x, account: e } : x;
+                    }),
+                  );
+                }}
+              />
+              <InputNumber
+                key={`splitInput${idx}`}
+                id={`splitInput${idx}`}
+                placeholder={`Split account #${idx} split`}
+                value={splitObjects.length > idx && splitObjects[idx].split}
+                defaultValue={0}
+                min={0}
+                max={10000}
+                precision={2}
+                step={100}
+                formatter={splitPercentFormatter}
+                parser={splitPercentParser}
+                onFocus={handleFocus}
+                onChange={value => {
+                  setSplitObjects(
+                    splitObjects.map((x, jdx) => {
+                      return idx === jdx ? { ...x, split: value } : x;
+                    }),
+                  );
+                }}
+              />
+              <Button
+                style={{ background: "#d2515185", color: "white" }}
+                onClick={() => {
+                  setSplitObjects(splitObjects.filter((x, kdx) => kdx !== idx));
+                }}
+              >
+                <CloseOutlined />
+              </Button>
+            </div>
+          ))}
         <Button
           onClick={() => {
-            setEditInProgress(true);
             setSplitObjects(splitObjects.concat({ account: "", split: "" }));
           }}
         >
@@ -108,7 +127,6 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
         </Button>
         <Button
           onClick={() => {
-            // console.log(splitObjects);
             if (validateSplitObjects(splitObjects)) {
               alert("Valid. \n" + JSON.stringify(splitObjects));
             } else {
@@ -118,10 +136,10 @@ export default function EditSplit({ lastHash, splitAccounts, split, mainnetProvi
         >
           Validate
         </Button>
-        <Button onClick={() => signSplitHandler(splitObjects, lastHash, projectWalletService)}>Sign Split</Button>
+        <Button onClick={() => signSplitHandler(splitObjects, lastHash)}>Sign Split</Button>
       </div>
       <div className="viewSplitChart" style={{ flex: "1 0 200px" }}>
-        {splitObjects && <PieChart data={formatPieChartData(splitObjects)} />}
+        {splitObjects && <PieChart viewBoxSize={[250, 250]} data={formatPieChartData(splitObjects)} />}
       </div>
     </div>
   );

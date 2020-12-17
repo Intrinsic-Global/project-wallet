@@ -13,6 +13,7 @@ const main = async () => {
   // * -----------
   // to read contract directory and deploy them all (add ".args" files for arguments)
   await autoDeploy();
+  // const yourContract = await deploy("YourContract"); // <-- add in constructor args like line 16 vvvv
 
   // ! OR CUSTOM DEPLOY
   // * ----------------
@@ -37,7 +38,7 @@ const autoDeploy = async () => {
   // loop through each solidity file from config.path.sources and deploy it
   // abi encode any args, if found
   // ! do not use .forEach in place of this loop
-  for (let i=0; i < contractList.length; i++) {
+  for (let i = 0; i < contractList.length; i++) {
     const file = contractList[i];
     const contractName = file.replace(".sol", "");
     const contractArgs = readArgsFile(contractName);
@@ -62,7 +63,7 @@ const deploy = async (contractName, _args) => {
     " 📄",
     chalk.cyan(contractName),
     "deployed to:",
-    chalk.magenta(deployed.address),
+    chalk.magenta(deployed.address)
   );
 
   if (!encoded || encoded.length <= 2) return deployed;

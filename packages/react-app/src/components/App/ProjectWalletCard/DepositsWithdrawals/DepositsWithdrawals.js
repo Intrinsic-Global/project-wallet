@@ -1,16 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Button, Input, Form } from "antd";
+import React, { useState } from "react";
 import { useBalance, useCustomContractReader } from "../../../../hooks";
 import { parseEther, formatEther } from "@ethersproject/units";
-import styled from "styled-components";
-import { ProjectWalletService } from "../../../../utils";
 import mobiscroll from "@mobiscroll/react";
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 
 const DepositsWithdrawals = ({ contract, localProvider, projectWalletService }) => {
   const [sendValue, setSendValue] = useState("");
   const [withdrawValue, setWithdrawValue] = useState("");
-  const projectWalletBalance = useBalance(localProvider, contract.address);
+  const projectWalletBalance = useBalance(localProvider, contract && contract.address);
   const allocatedEth = useCustomContractReader(contract, "checkBalance");
   return (
     <mobiscroll.Form theme="mobiscroll" themeVariant="light">
@@ -77,56 +74,6 @@ const DepositsWithdrawals = ({ contract, localProvider, projectWalletService }) 
         </mobiscroll.Button>
       </mobiscroll.FormGroup>
     </mobiscroll.Form>
-
-    //     <SectionedFormList>
-    //       <SectionedFormItem>
-    //         <label for="deposit">Amount to deposit:</label>
-    //         <Input
-    //           name="deposit"
-    //           class="text-input"
-    //           onChange={e => setSendValue(e.target.value)}
-    //           placeholder="Enter amount to deposit"
-    //           value={sendValue}
-    //         />
-    //       </SectionedFormItem>
-    //     </SectionedFormList>
-    //     <DepositButton
-    //       onClick={() => {
-    //         projectWalletService.deposit(sendValue);
-    //       }}
-    //     >
-    //       💵 Deposit ETH
-    //     </DepositButton>
-    //   </SectionedFormGroup>
-    //   <SectionedFormGroup>
-    //     <h3>Withdrawals</h3>
-    //     <SectionedFormList>
-    //       <SectionedFormItem>
-    //         <label for="name">Amount to withdraw:</label>
-    //         <Input
-    //           value={withdrawValue}
-    //           onChange={e => {
-    //             setWithdrawValue(e.target.value);
-    //           }}
-    //         />
-    //       </SectionedFormItem>
-    //     </SectionedFormList>
-    //     <WithdrawButton
-    //       onClick={() => {
-    //         projectWalletService.withdraw(parseEther(withdrawValue));
-    //       }}
-    //     >
-    //       💵 Withdraw ETH
-    //     </WithdrawButton>
-    //     <WithdrawButton
-    //       onClick={() => {
-    //         projectWalletService.withdrawMax();
-    //       }}
-    //     >
-    //       💵 Withdraw all ({allocatedEth && formatEther(allocatedEth)}) ETH
-    //     </WithdrawButton>
-    //   </SectionedFormGroup>
-    // </SectionedForm>
   );
 };
 

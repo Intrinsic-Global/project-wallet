@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { Card } from "antd";
-import { Address } from "../..";
-import { useContractReader } from "../../../hooks";
+import React from "react";
 import styled from "styled-components";
 import { ProjectWalletGrid } from "./ProjectWalletGrid";
 import { ProjectWalletIndexControls } from "./ProjectWalletIndexControls";

@@ -1,15 +1,15 @@
 import React from "react";
 import { List } from "antd";
 import { Address } from "../../..";
-import { useEventListener } from "eth-hooks";
+import { useCustomEventListener } from "../../../../hooks";
 import { formatEther } from "@ethersproject/units";
 
-const EventsPane = ({ readContracts, localProvider, mainnetProvider }) => {
-  const allocatedEvents = useEventListener(readContracts, "DistributingTreaty", "Allocated", localProvider, 1);
-  const signedByAllEvents = useEventListener(readContracts, "DistributingTreaty", "SignedByAll", localProvider, 1);
-  const setSplitEvents = useEventListener(readContracts, "DistributingTreaty", "SetSplit", localProvider, 1);
-  const withdrawEvents = useEventListener(readContracts, "DistributingTreaty", "Withdraw", localProvider, 1);
-  const receivedEvents = useEventListener(readContracts, "DistributingTreaty", "Received", localProvider, 1);
+const EventsPanev2 = ({ contract, localProvider, mainnetProvider }) => {
+  const allocatedEvents = useCustomEventListener(contract, "Allocated", localProvider, 1);
+  const signedByAllEvents = useCustomEventListener(contract, "SignedByAll", localProvider, 1);
+  const setSplitEvents = useCustomEventListener(contract, "SetSplit", localProvider, 1);
+  const withdrawEvents = useCustomEventListener(contract, "Withdraw", localProvider, 1);
+  const receivedEvents = useCustomEventListener(contract, "Received", localProvider, 1);
 
   // console.log("allocatedEvents :>> ", allocatedEvents);
   // console.log("signedByAllEvents :>> ", signedByAllEvents);
@@ -98,4 +98,4 @@ const EventsPane = ({ readContracts, localProvider, mainnetProvider }) => {
   );
 };
 
-export default EventsPane;
+export default EventsPanev2;
