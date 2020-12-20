@@ -1,4 +1,4 @@
-import { parseEther, formatEther } from "@ethersproject/units";
+import { parseEther } from "@ethersproject/units";
 import { ethers } from "ethers";
 
 export default class ProjectWalletService {

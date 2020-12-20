@@ -1,12 +1,16 @@
-import React, { useState, useEffect, createContext } from "react";
-
-import config from "../config";
+import React, { useState, createContext } from "react";
 
 export const ThemeContext = createContext();
+export const ContractsContext = createContext();
 
 const Store = ({ children }) => {
   const [theme, setTheme] = useState({ theme: "dark" });
-  return <ThemeContext.Provider value={[theme, setTheme]}>{children}</ThemeContext.Provider>;
+  const [contracts, setContracts] = useState({});
+  return (
+    <ThemeContext.Provider value={[theme, setTheme]}>
+      <ContractsContext.Provider value={[contracts, setContracts]}>{children}</ContractsContext.Provider>
+    </ThemeContext.Provider>
+  );
 };
 
 export default Store;
