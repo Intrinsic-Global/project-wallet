@@ -54,52 +54,64 @@ const AgreementContent = ({ contract, projectWalletService }) => {
   const signedContent = [].concat(signedTextList).concat(signedHashList);
   return (
     <mobiscroll.Form>
-      <mobiscroll.FormGroup>
-        <mobiscroll.FormGroupTitle>Unsigned Content</mobiscroll.FormGroupTitle>
-        {/* <mobiscroll.FormGroupContent> */}
-        <AgreementContentTable contentList={unsignedContent} />
-        {/* </mobiscroll.FormGroupContent> */}
-      </mobiscroll.FormGroup>
-      <mobiscroll.FormGroup>
-        <mobiscroll.FormGroupTitle>Signed Content</mobiscroll.FormGroupTitle>
-        {/* <mobiscroll.FormGroupContent> */}
-        <AgreementContentTable contentList={signedContent} />
-        {/* </mobiscroll.FormGroupContent> */}
-      </mobiscroll.FormGroup>
-      <mobiscroll.FormGroup>
-        <mobiscroll.FormGroupTitle>Plain text interactions</mobiscroll.FormGroupTitle>
-        <mobiscroll.Input
-          value={addText}
-          onChange={e => {
-            setAddText(e.target.value);
-            setHashInput(projectWalletService.calculateHash(addText));
-          }}
-        />
-        <mobiscroll.Button
-          onClick={() => {
-            projectWalletService.writeAgreementText(addText);
-          }}
-        >
-          Write Text To Chain
-        </mobiscroll.Button>
-        <mobiscroll.Button onClick={() => projectWalletService.sign()}>Sign</mobiscroll.Button>
-      </mobiscroll.FormGroup>
-      <mobiscroll.FormGroup>
-        <mobiscroll.FormGroupTitle>Hash Interactions</mobiscroll.FormGroupTitle>
-        <mobiscroll.Input
-          value={hashInput}
-          onChange={e => {
-            setHashInput(e.target.value);
-          }}
-        />
-        <mobiscroll.Button
-          onClick={() => {
-            projectWalletService.signHash(hashInput);
-          }}
-        >
-          Write Hash to Chain and Sign
-        </mobiscroll.Button>{" "}
-      </mobiscroll.FormGroup>
+      <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}>
+        <div style={{ flex: "1 1 200px", minWidth: "200px" }}>
+          <mobiscroll.FormGroup>
+            <mobiscroll.FormGroupTitle>Unsigned Content</mobiscroll.FormGroupTitle>
+            {/* <mobiscroll.FormGroupContent> */}
+            <AgreementContentTable contentList={unsignedContent} />
+            {/* </mobiscroll.FormGroupContent> */}
+          </mobiscroll.FormGroup>
+        </div>
+        <div style={{ flex: "1 1 200px", minWidth: "200px" }}>
+          <mobiscroll.FormGroup>
+            <mobiscroll.FormGroupTitle>Signed Content</mobiscroll.FormGroupTitle>
+            {/* <mobiscroll.FormGroupContent> */}
+            <AgreementContentTable contentList={signedContent} />
+            {/* </mobiscroll.FormGroupContent> */}
+          </mobiscroll.FormGroup>
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}>
+          <div style={{ flexGrow: "1" }}>
+            <mobiscroll.FormGroup>
+              <mobiscroll.FormGroupTitle>Plain text interactions</mobiscroll.FormGroupTitle>
+              <mobiscroll.Input
+                value={addText}
+                onChange={e => {
+                  setAddText(e.target.value);
+                  setHashInput(projectWalletService.calculateHash(addText));
+                }}
+              />
+              <mobiscroll.Button
+                onClick={() => {
+                  projectWalletService.writeAgreementText(addText);
+                }}
+              >
+                Write Text To Chain
+              </mobiscroll.Button>
+              <mobiscroll.Button onClick={() => projectWalletService.sign()}>Sign</mobiscroll.Button>
+            </mobiscroll.FormGroup>
+          </div>
+          <div style={{ flexGrow: "1" }}>
+            <mobiscroll.FormGroup>
+              <mobiscroll.FormGroupTitle>Hash Interactions</mobiscroll.FormGroupTitle>
+              <mobiscroll.Input
+                value={hashInput}
+                onChange={e => {
+                  setHashInput(e.target.value);
+                }}
+              />
+              <mobiscroll.Button
+                onClick={() => {
+                  projectWalletService.signHash(hashInput);
+                }}
+              >
+                Write Hash to Chain and Sign
+              </mobiscroll.Button>{" "}
+            </mobiscroll.FormGroup>
+          </div>
+        </div>
+      </div>
     </mobiscroll.Form>
 
     //   </div>

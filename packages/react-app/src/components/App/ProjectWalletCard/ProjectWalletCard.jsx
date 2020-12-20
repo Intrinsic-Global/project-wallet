@@ -47,6 +47,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
   ];
 
   const boxStyle = {
+    // border: "1px solid #cccccc",
     padding: 16,
     width: 400,
     margin: "auto",
@@ -79,7 +80,6 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
       <Card
         title={htmlCardTitle}
         maxHeight="300px"
-        extra={<a href="#">More</a>}
         tabList={tabList}
         activeTabKey={selectedTab}
         onTabChange={key => {
@@ -88,17 +88,17 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
       >
         <div id="tab-set" max-height="300px">
           {selectedTab == "split" && (
-            <div id="tab-splits">
+            <div id="tab-splits" /*style={boxStyle}*/>
               <SplitContainer contract={projectWalletContract} projectWalletService={projectWalletService} />
             </div>
           )}
           {selectedTab == "content" && (
-            <div id="tab-agreement-content">
+            <div id="tab-agreement-content" /*style={boxStyle}*/>
               <AgreementContent contract={projectWalletContract} projectWalletService={projectWalletService} />
             </div>
           )}
           {selectedTab == "signers" && (
-            <div id="tab-signers">
+            <div id="tab-signers" style={boxStyle}>
               <Signers
                 contract={projectWalletContract}
                 projectWalletService={projectWalletService}
@@ -107,7 +107,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
             </div>
           )}
           {selectedTab == "depositWithdrawals" && (
-            <div id="tab-deposits-withdrawals">
+            <div id="tab-deposits-withdrawals" /*style={boxStyle}*/>
               <DepositsWithdrawals
                 contract={projectWalletContract}
                 localProvider={localProvider}
@@ -117,7 +117,7 @@ export default function ProjectWalletCard({ mainnetProvider, localProvider, user
           )}
         </div>
       </Card>
-      <Card title="Events" extra={<a href="#">More</a>}>
+      <Card title="Events">
         <EventsPanev2
           contract={projectWalletContract}
           readContracts={readContracts}
