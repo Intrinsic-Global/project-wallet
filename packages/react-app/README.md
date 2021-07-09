@@ -6,9 +6,9 @@ This package is a fork of the default template provided by [Create React App](ht
 
 To fully install all packages, you need to run some commands:
 
-````bash
+```bash
 npm login --registry=https://npm.mobiscroll.com --scope=@mobiscroll
-````
+```
 
 Username: `intrinsicglobal`
 Password: `iYudYfyRirj9wWaXFP9l`
