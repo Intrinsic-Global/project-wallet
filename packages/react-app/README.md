@@ -2,6 +2,17 @@
 
 This package is a fork of the default template provided by [Create React App](https://github.com/facebook/create-react-app).
 
+## Install packages
+
+To fully install all packages, you need to run some commands:
+
+```bash
+npm login --registry=https://npm.mobiscroll.com --scope=@mobiscroll
+```
+
+Username: `intrinsicglobal`
+Password: `iYudYfyRirj9wWaXFP9l`
+
 ## Available Scripts
 
 In the project directory, you can run:
